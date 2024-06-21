@@ -106,3 +106,12 @@ venv.bak/
 # Windows
 Thumbs.db
 ehthumbs.db
+!/machines.xlsx
+
+!/import_data.py
+
+!/maintenance.xlsx
+
+!/reclamations.xlsx
+
+!/silant_bd.xlsx

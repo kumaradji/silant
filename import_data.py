@@ -1,57 +1,79 @@
-import openpyxl
+import os
+import django
+import pandas as pd
 from django.contrib.auth.models import User
+from django.utils.dateparse import parse_date
+from inventory.models import Machine, Maintenance, Reclamation
 
-from inventory.models import Machine
+# Set the Django settings module
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'silant.settings')
 
+# Initialize Django
+django.setup()
 
-def import_excel_data(file_path, model):
-    wb = openpyxl.load_workbook(file_path)
-    sheet = wb.active
+# Path to your Excel file
+excel_file_path = '/Users/kumar_air/WebstormProjects/silant/silant_bd.xlsx'
 
-    for row in sheet.iter_rows(min_row=2, values_only=True):
-        if model == Machine:
-            Machine.objects.create(
-                serial_number=row[0],
-                model_technique=row[1],
-                model_engine=row[2],
-                serial_engine=row[3],
-                model_transmission=row[4],
-                serial_transmission=row[5],
-                model_drive_axle=row[6],
-                serial_drive_axle=row[7],
-                model_steering_axle=row[8],
-                serial_steering_axle=row[9],
-                delivery_contract=row[10],
-                shipment_date=row[11],
-                customer=User.objects.get(username=row[12]),
-                service_company=User.objects.get(username=row[13])
-            )
-        elif model == Maintenance:
-            Maintenance.objects.create(
-                machine=Machine.objects.get(serial_number=row[0]),
-                maintenance_type=row[1],
-                maintenance_date=row[2],
-                operating_time=row[3],
-                order_number=row[4],
-                order_date=row[5],
-                service_company=User.objects.get(username=row[6])
-            )
-        elif model == Reclamation:
-            Reclamation.objects.create(
-                machine=Machine.objects.get(serial_number=row[0]),
-                failure_date=row[1],
-                operating_time=row[2],
-                failure_unit=row[3],
-                failure_description=row[4],
-                recovery_method=row[5],
-                used_spare_parts=row[6],
-                recovery_date=row[7],
-                downtime=row[8],
-                service_company=User.objects.get(username=row[9])
-            )
+# Load data from Excel into a DataFrame
+df = pd.read_excel(excel_file_path, sheet_name=None)  # Load all sheets from the file
 
+# Data for the Machine model
+machines_data = df['Машины']
 
-# Вызов функции для каждой таблицы
-import_excel_data('/Users/kumar_air/WebstormProjects/silant/machines.xlsx', Machine)
-import_excel_data('/Users/kumar_air/WebstormProjects/silant/maintenance.xlsx', Maintenance)
-import_excel_data('/Users/kumar_air/WebstormProjects/silant/reclamations.xlsx', Reclamation)
+for index, row in machines_data.iterrows():
+    customer, _ = User.objects.get_or_create(username=row['Покупатель'])
+    service_company, _ = User.objects.get_or_create(username=row['Сервисная компания'])
+
+    machine = Machine.objects.create(
+        serial_number=row['Зав. № машины'],
+        model_technique=row['Модель техники'],
+        model_engine=row['Модель двигателя'],
+        serial_engine=row['Зав. № двигателя'],
+        model_transmission=row['Модель трансмиссии'],
+        serial_transmission=row['Зав. № трансмиссии'],
+        model_drive_axle=row['Модель ведущего моста'],
+        serial_drive_axle=row['Зав. № ведущего моста'],
+        model_steering_axle=row['Модель управляемого моста'],
+        serial_steering_axle=row['Зав. № управляемого моста'],
+        delivery_contract=row['Грузополучатель'],
+        shipment_date=parse_date(row['Дата отгрузки с завода']),
+        customer=customer,
+        service_company=service_company
+    )
+
+# Data for the Maintenance model
+maintenance_data = df['Maintenance']
+
+for index, row in maintenance_data.iterrows():
+    service_company, _ = User.objects.get_or_create(username=row['Организация, проводившая ТО'])
+    machine = Machine.objects.get(serial_number=row['Зав. № машины'])
+
+    maintenance = Maintenance.objects.create(
+        machine=machine,
+        maintenance_type=row['Вид ТО'],
+        maintenance_date=parse_date(row['Дата проведения ТО']),
+        operating_time=int(row['Наработка, м/час']),
+        order_number=row['№ заказ-наряда'],
+        order_date=parse_date(row['дата заказ-наряда']),
+        service_company=service_company
+    )
+
+# Data for the Reclamation model
+reclamation_data = df['рекламация']
+
+for index, row in reclamation_data.iterrows():
+    service_company, _ = User.objects.get_or_create(username=row['Сервисная компания'])
+    machine = Machine.objects.get(serial_number=row['Зав. № машины'])
+
+    reclamation = Reclamation.objects.create(
+        machine=machine,
+        failure_date=parse_date(row['Дата отказа']),
+        operating_time=int(row['Наработка, м/час']),
+        failure_unit=row['Узел отказа'],
+        failure_description=row['Описание отказа'],
+        recovery_method=row['Способ восстановления'],
+        used_spare_parts=row['Используемые запасные части'],
+        recovery_date=parse_date(row['Дата восстановления']),
+        downtime=int(row['Время простоя техники']),
+        service_company=service_company
+    )
