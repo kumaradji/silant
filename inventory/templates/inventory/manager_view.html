@@ -1,0 +1,144 @@
+<!-- inventory/templates/inventory/manager_view.html -->
+{% extends 'inventory/base.html' %}
+{% load static %}
+
+{% block title %}Менеджер{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <h1>Электронная сервисная книжка "Мой Силант"</h1>
+    <div class="info-section">
+        <h2>Информация о рекламациях Вашей техники</h2>
+        <form method="GET" action="{% url 'search_machine' %}">
+            <input type="text" name="serial_number" placeholder="Зав. № машины">
+            <select name="failure_unit">
+                <option value="">Узел отказа</option>
+                <!-- Добавьте опции для узлов отказа -->
+            </select>
+            <select name="recovery_method">
+                <option value="">Способ восстановления</option>
+                <!-- Добавьте опции для способов восстановления -->
+            </select>
+            <select name="service_company">
+                <option value="">Сервисная компания</option>
+                <!-- Добавьте опции для сервисных компаний -->
+            </select>
+            <button type="submit">Найти</button>
+            <button type="button">Добавить рекламацию</button>
+        </form>
+    </div>
+    <div class="tabs">
+        <button onclick="showTab('machines')" class="active">Общая информация</button>
+        <button onclick="showTab('maintenances')">Техническое обслуживание</button>
+        <button onclick="showTab('reclamations')">Рекламации</button>
+    </div>
+    <div id="machines" class="tab-content active">
+        <h2>Машины</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Модель техники</th>
+                    <th>Зав. № машины</th>
+                    <th>Модель двигателя</th>
+                    <th>Модель трансмиссии</th>
+                    <th>Модель ведущего моста</th>
+                    <th>Модель управляемого моста</th>
+                    <th>Дата отгрузки с завода</th>
+                    <th>Покупатель</th>
+                    <th>Грузополучатель</th>
+                    <th>Адрес поставки</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for machine in machines %}
+                <tr>
+                    <td>{{ machine.model_technique }}</td>
+                    <td>{{ machine.serial_number }}</td>
+                    <td>{{ machine.model_engine }}</td>
+                    <td>{{ machine.model_transmission }}</td>
+                    <td>{{ machine.model_drive_axle }}</td>
+                    <td>{{ machine.model_steering_axle }}</td>
+                    <td>{{ machine.shipment_date }}</td>
+                    <td>{{ machine.customer.username }}</td>
+                    <td>{{ machine.service_company.username }}</td>
+                    <td>{{ machine.delivery_contract }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id="maintenances" class="tab-content">
+        <h2>Техническое обслуживание</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Машина</th>
+                    <th>Вид ТО</th>
+                    <th>Дата проведения ТО</th>
+                    <th>Наработка</th>
+                    <th>Номер заказа</th>
+                    <th>Дата заказа</th>
+                    <th>Сервисная компания</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for maintenance in maintenances %}
+                <tr>
+                    <td>{{ maintenance.machine.serial_number }}</td>
+                    <td>{{ maintenance.maintenance_type }}</td>
+                    <td>{{ maintenance.maintenance_date }}</td>
+                    <td>{{ maintenance.operating_time }}</td>
+                    <td>{{ maintenance.order_number }}</td>
+                    <td>{{ maintenance.order_date }}</td>
+                    <td>{{ maintenance.service_company.username }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id="reclamations" class="tab-content">
+        <h2>Рекламации</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Зав. № машины</th>
+                    <th>Дата отказа</th>
+                    <th>Наработка, м/час</th>
+                    <th>Узел отказа</th>
+                    <th>Описание отказа</th>
+                    <th>Способ восстановления</th>
+                    <th>Используемые запасные части</th>
+                    <th>Дата восстановления</th>
+                    <th>Время простоя техники</th>
+                    <th>Сервисная компания</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reclamation in reclamations %}
+                <tr>
+                    <td>{{ reclamation.machine.serial_number }}</td>
+                    <td>{{ reclamation.failure_date }}</td>
+                    <td>{{ reclamation.operating_time }}</td>
+                    <td>{{ reclamation.failure_unit }}</td>
+                    <td>{{ reclamation.failure_description }}</td>
+                    <td>{{ reclamation.recovery_method }}</td>
+                    <td>{{ reclamation.used_spare_parts }}</td>
+                    <td>{{ reclamation.recovery_date }}</td>
+                    <td>{{ reclamation.downtime }}</td>
+                    <td>{{ reclamation.service_company.username }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    function showTab(tabId) {
+        const tabs = document.querySelectorAll('.tab-content');
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+    }
+</script>
+{% endblock %}

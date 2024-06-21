@@ -1,0 +1,41 @@
+<!-- inventory/templates/inventory/search_machine.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Machine</title>
+</head>
+<body>
+    <h1>Search Machine</h1>
+    <form method="GET" action="{% url 'search_machine' %}">
+        <label for="serial_number">Serial Number:</label>
+        <input type="text" id="serial_number" name="serial_number">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if machines %}
+        <h2>Search Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Serial Number</th>
+                    <th>Model Technique</th>
+                    <!-- Add more columns as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for machine in machines %}
+                <tr>
+                    <td>{{ machine.serial_number }}</td>
+                    <td>{{ machine.model_technique }}</td>
+                    <!-- Add more columns as needed -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif machines is not None %}
+        <p>No machines found with the given serial number.</p>
+    {% endif %}
+</body>
+</html>

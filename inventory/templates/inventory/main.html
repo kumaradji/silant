@@ -1,0 +1,130 @@
+<!-- inventory/templates/inventory/main.html -->
+{% extends 'inventory/base.html' %}
+{% load static %}
+
+{% block title %}Основная страница{% endblock %}
+
+{% block content %}
+<header>
+    <div>
+        <img src="{% static 'images/Logotype_red.png' %}" alt="логотип">
+        <span>+7-8352-20-12-09, telegram</span>
+        <a href="{% url 'logout' %}">выход</a>
+    </div>
+    <h1>Электронная сервисная книжка "Мой Силант"</h1>
+</header>
+<main>
+    <section>
+        <div>
+            <button onclick="showTab('machines')">tab: общая инфо</button>
+            <button onclick="showTab('maintenances')">tab: ТО</button>
+            <button onclick="showTab('reclamations')">tab: рекламации</button>
+        </div>
+        <div id="machines" class="tab-content">
+            <h2>Машины</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Модель техники</th>
+                        <th>Зав. № машины</th>
+                        <th>Модель двигателя</th>
+                        <th>Модель трансмиссии</th>
+                        <th>Модель ведущего моста</th>
+                        <th>Модель управляемого моста</th>
+                        <th>Дата отгрузки с завода</th>
+                        <th>Покупатель</th>
+                        <th>Грузополучатель</th>
+                        <th>Адрес поставки</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for machine in machines %}
+                    <tr>
+                        <td><a href="{% url 'machine_detail' machine.id %}">{{ machine.model_technique }}</a></td>
+                        <td>{{ machine.serial_number }}</td>
+                        <td>{{ machine.model_engine }}</td>
+                        <td>{{ machine.model_transmission }}</td>
+                        <td>{{ machine.model_drive_axle }}</td>
+                        <td>{{ machine.model_steering_axle }}</td>
+                        <td>{{ machine.shipment_date }}</td>
+                        <td>{{ machine.customer.username }}</td>
+                        <td>{{ machine.service_company.username }}</td>
+                        <td>{{ machine.delivery_contract }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="maintenances" class="tab-content">
+            <h2>ТО</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Машина</th>
+                        <th>Вид ТО</th>
+                        <th>Дата проведения ТО</th>
+                        <th>Наработка</th>
+                        <th>Номер заказа</th>
+                        <th>Дата заказа</th>
+                        <th>Сервисная компания</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for maintenance in maintenances %}
+                    <tr>
+                        <td><a href="{% url 'machine_detail' maintenance.machine.id %}">{{ maintenance.machine.serial_number }}</a></td>
+                        <td>{{ maintenance.maintenance_type }}</td>
+                        <td>{{ maintenance.maintenance_date }}</td>
+                        <td>{{ maintenance.operating_time }}</td>
+                        <td>{{ maintenance.order_number }}</td>
+                        <td>{{ maintenance.order_date }}</td>
+                        <td>{{ maintenance.service_company.username }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="reclamations" class="tab-content">
+            <h2>Рекламации</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Машина</th>
+                        <th>Дата отказа</th>
+                        <th>Наработка</th>
+                        <th>Узел отказа</th>
+                        <th>Описание отказа</th>
+                        <th>Способ восстановления</th>
+                        <th>Использованные запчасти</th>
+                        <th>Дата восстановления</th>
+                        <th>Время простоя</th>
+                        <th>Сервисная компания</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reclamation in reclamations %}
+                    <tr>
+                        <td><a href="{% url 'machine_detail' reclamation.machine.id %}">{{ reclamation.machine.serial_number }}</a></td>
+                        <td>{{ reclamation.failure_date }}</td>
+                        <td>{{ reclamation.operating_time }}</td>
+                        <td>{{ reclamation.failure_unit }}</td>
+                        <td>{{ reclamation.failure_description }}</td>
+                        <td>{{ reclamation.recovery_method }}</td>
+                        <td>{{ reclamation.used_spare_parts }}</td>
+                        <td>{{ reclamation.recovery_date }}</td>
+                        <td>{{ reclamation.downtime }}</td>
+                        <td>{{ reclamation.service_company.username }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+<footer>
+    <div>
+        <span>+7-8352-20-12-09, telegram</span>
+        <span>Мой Силант 2022</span>
+    </div>
+</footer>
+{% endblock %}

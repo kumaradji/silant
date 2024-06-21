@@ -1,0 +1,13 @@
+django~=5.0
+django-allauth~=0.63.3
+pip==24.1
+attrs~=23.1.0
+cryptography~=41.0.7
+Pillow~=10.1.0
+Jinja2~=3.1.2
+filelock~=3.13.1
+asgiref~=3.7.2
+sqlparse~=0.4.4
+requests~=2.31.0
+setuptools~=69.0.3
+platformdirs~=4.1.0
