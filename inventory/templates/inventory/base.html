@@ -6,6 +6,7 @@
     <title>{% block title %}Мой Силант{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -30,6 +31,9 @@
     </header>
     <div class="info-header">
         <p>Проверьте комплектацию и технические характеристики техники Силант</p>
+        {% if user.is_authenticated %}
+            <p>Пользователь: {{ user.username }}</p>
+        {% endif %}
     </div>
     <main>
         {% block content %}{% endblock %}

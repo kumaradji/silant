@@ -34,11 +34,174 @@ header, footer {
     align-items: center;
 }
 
+/* Основные стили */
+body {
+    font-family: 'PT Astra Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #EBE6D6;
+    color: #163E6C;
+}
+
+header, footer {
+    background-color: #163E6C;
+    color: #EBE6D6;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.header-left, .footer-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-left img {
+    height: 50px;
+}
+
+.header-center {
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+}
+
+.header-right, .footer-right {
+    display: flex;
+    align-items: center;
+}
+
 .header-title {
     margin: 0;
     font-size: 1.1em;
     color: #D20A11;
 }
+
+.button.login-button {
+    color: #D20A11;
+}
+
+main {
+    padding: 20px;
+    flex: 1;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    border: 1px solid #163E6C;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #163E6C;
+    color: #EBE6D6;
+}
+
+button {
+    background-color: #163E6C;
+    color: #EBE6D6;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #D20A11;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.info-header {
+    text-align: center;
+    margin: 20px 0;
+}
+
+@media (max-width: 1440px) {
+    .header-left img {
+        height: 40px;
+    }
+
+    .header-title {
+        font-size: 1.3em;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    table th, table td {
+        padding: 6px;
+    }
+}
+
+@media (max-width: 768px) {
+    header, footer {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .header-left, .footer-left, .header-right, .footer-right {
+        justify-content: center;
+    }
+
+    .header-title {
+        font-size: 1.2em;
+    }
+
+    button {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    table th, table td {
+        font-size: 12px;
+        padding: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-left img {
+        height: 30px;
+    }
+
+    .header-title {
+        font-size: 1em;
+    }
+
+    button {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+
+    table th, table td {
+        font-size: 10px;
+        padding: 2px;
+    }
+}
+
 
 .button.login-button {
     color: #D20A11;
