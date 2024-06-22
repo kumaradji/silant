@@ -1,20 +1,3 @@
-/* static/css/styles.css */
-
-/* Добавление шрифтов */
-@font-face {
-    font-family: 'PT Astra Sans';
-    src: url('../fonts/PT_Astra_Sans/PT-Astra-Sans_Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'PT Astra Sans';
-    src: url('../fonts/PT_Astra_Sans/PT-Astra-Sans_Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
 /* Основные стили */
 body {
     font-family: 'PT Astra Sans', sans-serif;
@@ -28,23 +11,37 @@ header, footer {
     background-color: #163E6C;
     color: #EBE6D6;
     padding: 10px;
-    text-align: center;
-}
-
-header div, footer div {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-header div img {
-    max-height: 50px;
+.header-left {
+    display: flex;
+    align-items: center;
 }
 
-header a, footer a {
+.header-left img {
+    height: 50px;
+}
+
+.header-center {
+    text-align: center;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-title {
+    margin: 0;
+    font-size: 1.1em;
     color: #D20A11;
-    text-decoration: none;
-    font-weight: bold;
+}
+
+.button.login-button {
+    color: #D20A11;
 }
 
 main {
@@ -90,161 +87,20 @@ button:hover {
     display: block;
 }
 
-/* Дополнительные стили для нового макета */
-.header-container {
-    background-color: #163E6C;
-    padding: 10px;
+
+.footer-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    color: #EBE6D6;
-}
-
-.header-container img {
-    height: 50px;
-}
-
-.header-container a {
-    color: #D20A11;
-    text-decoration: none;
-    margin-left: 20px;
-}
-
-.header-container a:hover {
-    text-decoration: underline;
-}
-
-.main-container {
-    padding: 20px;
-    background-color: #EBE6D6;
-    color: #163E6C;
-}
-
-.main-container h1 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.main-container .info-section {
-    margin-bottom: 20px;
-}
-
-.main-container .info-section h2 {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.main-container .info-section form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-
-.main-container .info-section form input,
-.main-container .info-section form select,
-.main-container .info-section form button {
     padding: 10px;
-    font-size: 16px;
 }
 
-.main-container .info-section form button {
-    background-color: #163E6C;
-    color: #EBE6D6;
-    border: none;
-    cursor: pointer;
+
+.footer-container span {
+    display: block;
+    margin: 5px 0;
 }
 
-.main-container .info-section form button:hover {
-    background-color: #D20A11;
-}
-
-.main-container .tabs {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.main-container .tabs button {
-    background-color: #EBE6D6;
-    color: #163E6C;
-    border: 2px solid #163E6C;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.main-container .tabs button.active {
-    background-color: #D20A11;
-    color: #EBE6D6;
-}
-
-.main-container table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.main-container table th,
-.main-container table td {
-    border: 1px solid #163E6C;
-    padding: 8px;
-    text-align: left;
-}
-
-.main-container table th {
-    background-color: #163E6C;
-    color: #EBE6D6;
-}
-
-.main-container table td {
-    background-color: #EBE6D6;
-    color: #163E6C;
-}
-
-.login-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.login-container h2 {
-    margin-bottom: 20px;
+.info-header {
     text-align: center;
-}
-
-.login-container form {
-    display: flex;
-    flex-direction: column;
-}
-
-.login-container form button {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #163E6C;
-    color: #EBE6D6;
-    border: none;
-    cursor: pointer;
-}
-
-.login-container form button:hover {
-    background-color: #D20A11;
-}
-
-@media (max-width: 768px) {
-    header div, footer div {
-        flex-direction: column;
-    }
-
-    table th, table td {
-        font-size: 12px;
-    }
-
-    button {
-        font-size: 14px;
-    }
+    margin: 20px 0;
 }

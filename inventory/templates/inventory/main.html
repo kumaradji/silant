@@ -5,13 +5,12 @@
 {% block title %}Основная страница{% endblock %}
 
 {% block content %}
-
 <main>
     <section>
         <div>
-            <button onclick="showTab('machines')">общая инфо</button>
+            <button onclick="showTab('machines')">Общая информация</button>
             <button onclick="showTab('maintenances')">ТО</button>
-            <button onclick="showTab('reclamations')">рекламации</button>
+            <button onclick="showTab('reclamations')">Рекламации</button>
         </div>
         <div id="machines" class="tab-content">
             <h2>Машины</h2>
@@ -32,8 +31,8 @@
                 </thead>
                 <tbody>
                     {% for machine in machines %}
-                    <tr>
-                        <td><a href="{% url 'machine_detail' machine.id %}">{{ machine.model_technique }}</a></td>
+                    <tr onclick="location.href='{% url 'machine_detail' machine.id %}'">
+                        <td>{{ machine.model_technique }}</td>
                         <td>{{ machine.serial_number }}</td>
                         <td>{{ machine.model_engine }}</td>
                         <td>{{ machine.model_transmission }}</td>
@@ -64,8 +63,8 @@
                 </thead>
                 <tbody>
                     {% for maintenance in maintenances %}
-                    <tr>
-                        <td><a href="{% url 'machine_detail' maintenance.machine.id %}">{{ maintenance.machine.serial_number }}</a></td>
+                    <tr onclick="location.href='{% url 'maintenance_detail' maintenance.id %}'">
+                        <td>{{ maintenance.machine.serial_number }}</td>
                         <td>{{ maintenance.maintenance_type }}</td>
                         <td>{{ maintenance.maintenance_date }}</td>
                         <td>{{ maintenance.operating_time }}</td>
@@ -96,8 +95,8 @@
                 </thead>
                 <tbody>
                     {% for reclamation in reclamations %}
-                    <tr>
-                        <td><a href="{% url 'machine_detail' reclamation.machine.id %}">{{ reclamation.machine.serial_number }}</a></td>
+                    <tr onclick="location.href='{% url 'reclamation_detail' reclamation.id %}'">
+                        <td>{{ reclamation.machine.serial_number }}</td>
                         <td>{{ reclamation.failure_date }}</td>
                         <td>{{ reclamation.operating_time }}</td>
                         <td>{{ reclamation.failure_unit }}</td>
@@ -115,4 +114,14 @@
     </section>
 </main>
 
+<script>
+function showTab(tabId) {
+    var tabs = document.getElementsByClassName('tab-content');
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].style.display = 'none';
+    }
+    document.getElementById(tabId).style.display = 'block';
+}
+showTab('machines');
+</script>
 {% endblock %}

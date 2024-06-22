@@ -96,7 +96,7 @@ def main_view(request):
         machines = Machine.objects.filter(service_company=user).order_by('shipment_date')
         maintenances = Maintenance.objects.filter(service_company=user).order_by('maintenance_date')
         reclamations = Reclamation.objects.filter(service_company=user).order_by('failure_date')
-    else:
+    else:  # Manager or other roles
         machines = Machine.objects.all().order_by('shipment_date')
         maintenances = Maintenance.objects.all().order_by('maintenance_date')
         reclamations = Reclamation.objects.all().order_by('failure_date')
@@ -108,10 +108,12 @@ def main_view(request):
     })
 
 
+
 def welcome_view(request):
     serial_number = request.GET.get('serial_number')
     machines = Machine.objects.filter(serial_number=serial_number) if serial_number else None
     return render(request, 'inventory/welcome.html', {'machines': machines})
+
 
 
 def index_view(request):

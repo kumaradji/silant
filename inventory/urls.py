@@ -1,7 +1,6 @@
 # inventory/urls.py
 
 from django.urls import path
-from . import views
 from .views import (
     welcome_view,
     search_machine,
@@ -25,5 +24,3 @@ urlpatterns = [
     path('dashboard/', dashboard_view, name='dashboard'),
     path('login/', login_view, name='login'),
 ]
-
-
