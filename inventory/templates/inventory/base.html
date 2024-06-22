@@ -1,4 +1,4 @@
-<!-- inventory/templates/inventory/base.html -->
+<!-- inventory/base.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -23,7 +23,9 @@
             {% endif %}
         </div>
     </header>
-    {% block content %}{% endblock %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
     <footer class="footer-container">
         <div>
             <span>+7-8352-20-12-09, telegram</span>

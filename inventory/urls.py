@@ -12,3 +12,5 @@ urlpatterns = [
     path('main/', main_view, name='main'),
     path('machine/<int:machine_id>/', machine_detail_view, name='machine_detail'),
 ]
+
+

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Machine, Maintenance, Reclamation
 
@@ -93,3 +94,48 @@ def welcome_view(request):
     serial_number = request.GET.get('serial_number')
     machines = Machine.objects.filter(serial_number=serial_number) if serial_number else None
     return render(request, 'inventory/welcome.html', {'machines': machines})
+
+
+def index_view(request):
+    return render(request, 'inventory/index.html')
+
+
+def machine_search_view(request):
+    query = request.GET.get('serial_number')
+    machine = Machine.objects.filter(serial_number=query).first()
+    if machine:
+        return render(request, 'inventory/machine_search_result.html', {'machine': machine})
+    else:
+        return render(request, 'inventory/machine_search_result.html',
+                      {'error': 'Данных о машине с таким заводским номером нет в системе.'})
+
+
+@login_required
+def dashboard_view(request):
+    user = request.user
+    machines = Machine.objects.filter(owner=user)
+    maintenances = Maintenance.objects.filter(machine__in=machines)
+    reclamations = Reclamation.objects.filter(machine__in=machines)
+    return render(request, 'inventory/dashboard.html', {
+        'machines': machines,
+        'maintenances': maintenances,
+        'reclamations': reclamations
+    })
+
+
+@login_required
+def machine_detail_view(request, id):
+    machine = get_object_or_404(Machine, id=id)
+    return render(request, 'inventory/machine_detail.html', {'machine': machine})
+
+
+@login_required
+def maintenance_detail_view(request, id):
+    maintenance = get_object_or_404(Maintenance, id=id)
+    return render(request, 'inventory/maintenance_detail.html', {'maintenance': maintenance})
+
+
+@login_required
+def reclamation_detail_view(request, id):
+    reclamation = get_object_or_404(Reclamation, id=id)
+    return render(request, 'inventory/reclamation_detail.html', {'reclamation': reclamation})
