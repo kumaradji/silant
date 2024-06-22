@@ -3,7 +3,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Machine(models.Model):
     serial_number = models.CharField(max_length=255, unique=True, verbose_name='Зав. № машины')
     model_technique = models.CharField(max_length=255, verbose_name='Модель техники')
@@ -18,9 +17,10 @@ class Machine(models.Model):
     delivery_contract = models.CharField(max_length=255, verbose_name='Договор поставки')
     shipment_date = models.DateField(verbose_name='Дата отгрузки с завода')
     customer = models.ForeignKey(User, related_name='customer_machines', on_delete=models.CASCADE, verbose_name='Покупатель')
+    consignee = models.CharField(max_length=255, verbose_name='Грузополучатель (конечный потребитель)')
+    delivery_address = models.CharField(max_length=255, verbose_name='Адрес поставки (эксплуатации)')
+    configuration = models.TextField(verbose_name='Комплектация (доп. опции)')
     service_company = models.ForeignKey(User, related_name='service_machines', on_delete=models.CASCADE, verbose_name='Сервисная компания')
-    additional_options = models.TextField(verbose_name='Комплектация (доп. опции)', blank=True, null=True)
-    delivery_address = models.CharField(max_length=255, verbose_name='Адрес поставки (эксплуатации)', blank=True, null=True)
 
     def __str__(self):
         return self.serial_number
@@ -56,12 +56,8 @@ class Reclamation(models.Model):
     recovery_method = models.CharField(max_length=255, verbose_name='Способ восстановления')
     used_spare_parts = models.TextField(verbose_name='Используемые запасные части')
     recovery_date = models.DateField(verbose_name='Дата восстановления')
-    downtime = models.PositiveIntegerField(verbose_name='Время простоя техники', editable=False)
+    downtime = models.PositiveIntegerField(verbose_name='Время простоя техники')
     service_company = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Сервисная компания')
-
-    def save(self, *args, **kwargs):
-        self.downtime = (self.recovery_date - self.failure_date).days
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.machine} - {self.failure_unit}'
@@ -69,4 +65,3 @@ class Reclamation(models.Model):
     class Meta:
         verbose_name = 'Рекламация'
         verbose_name_plural = 'Рекламации'
-

@@ -5,14 +5,52 @@
 
 {% block content %}
 <main>
-    <section>
+    <header class="header-container">
         <div>
-            <button onclick="showTab('machines')">tab: общая инфо</button>
-            <button onclick="showTab('maintenances')">tab: ТО</button>
-            <button onclick="showTab('reclamations')">tab: рекламации</button>
+            <img src="{% static 'images/Logotype accent RGB 1.jpg' %}" alt="логотип">
+            <span>+7-8352-20-12-09, telegram</span>
         </div>
-
-        <div id="machines" class="tab-content">
+        <div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}">Выйти из сервиса</a>
+            {% else %}
+                <a href="{% url 'login' %}">Вход</a>
+            {% endif %}
+        </div>
+    </header>
+    <section class="main-container">
+        <h1>Электронная сервисная книжка "Мой Силант"</h1>
+        <p>Пользователь {{ user.first_name }}</p>
+        <form method="GET" action="{% url 'dashboard' %}">
+            <label for="model_technique">Модель техники</label>
+            <select name="model_technique" id="model_technique">
+                <option value="">---</option>
+                {% for model in model_techniques %}
+                    <option value="{{ model }}" {% if model == request.GET.model_technique %}selected{% endif %}>{{ model }}</option>
+                {% endfor %}
+            </select>
+            <label for="model_engine">Модель двигателя</label>
+            <select name="model_engine" id="model_engine">
+                <option value="">---</option>
+                {% for model in model_engines %}
+                    <option value="{{ model }}" {% if model == request.GET.model_engine %}selected{% endif %}>{{ model }}</option>
+                {% endfor %}
+            </select>
+            <label for="model_transmission">Модель трансмиссии</label>
+            <select name="model_transmission" id="model_transmission">
+                <option value="">---</option>
+                {% for model in model_transmissions %}
+                    <option value="{{ model }}" {% if model == request.GET.model_transmission %}selected{% endif %}>{{ model }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Найти</button>
+        </form>
+        <div class="tabs">
+            <button onclick="showTab('machines')" class="active">Общая информация</button>
+            <button onclick="showTab('maintenances')">Техническое обслуживание</button>
+            <button onclick="showTab('reclamations')">Рекламации</button>
+        </div>
+        <div id="machines" class="tab-content active">
             <h2>Машины</h2>
             <table>
                 <thead>
@@ -39,8 +77,8 @@
                         <td>{{ machine.model_drive_axle }}</td>
                         <td>{{ machine.model_steering_axle }}</td>
                         <td>{{ machine.shipment_date }}</td>
-                        <td>{{ machine.customer.username }}</td>
-                        <td>{{ machine.service_company.username }}</td>
+                        <td>{{ machine.customer.first_name }}</td>
+                        <td>{{ machine.service_company.first_name }}</td>
                         <td>{{ machine.delivery_contract }}</td>
                     </tr>
                     {% endfor %}
@@ -71,7 +109,7 @@
                         <td>{{ maintenance.operating_time }}</td>
                         <td>{{ maintenance.order_number }}</td>
                         <td>{{ maintenance.order_date }}</td>
-                        <td>{{ maintenance.service_company.username }}</td>
+                        <td>{{ maintenance.service_company.first_name }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -107,7 +145,7 @@
                         <td>{{ reclamation.used_spare_parts }}</td>
                         <td>{{ reclamation.recovery_date }}</td>
                         <td>{{ reclamation.downtime }}</td>
-                        <td>{{ reclamation.service_company.username }}</td>
+                        <td>{{ reclamation.service_company.first_name }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

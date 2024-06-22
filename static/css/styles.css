@@ -1,5 +1,6 @@
 /* static/css/styles.css */
 
+/* Добавление шрифтов */
 @font-face {
     font-family: 'PT Astra Sans';
     src: url('../fonts/PT_Astra_Sans/PT-Astra-Sans_Regular.ttf') format('truetype');
@@ -14,7 +15,7 @@
     font-style: normal;
 }
 
-
+/* Основные стили */
 body {
     font-family: 'PT Astra Sans', sans-serif;
     margin: 0;
@@ -89,8 +90,7 @@ button:hover {
     display: block;
 }
 
-
-/* Additional styles for the new layout */
+/* Дополнительные стили для нового макета */
 .header-container {
     background-color: #163E6C;
     padding: 10px;

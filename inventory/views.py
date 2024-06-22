@@ -1,27 +1,28 @@
-from django.shortcuts import render
-from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login as auth_login
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Machine, Maintenance, Reclamation
 
 
 def is_client(user):
-    return user.groups.filter(name='client').exists()
+    return user.groups.filter(name='Клиент').exists()
 
 
 def is_service_company(user):
-    return user.groups.filter(name='service_company').exists()
+    return user.groups.filter(name='Сервисная организация').exists()
 
 
 def is_manager(user):
-    return user.groups.filter(name='manager').exists()
+    return user.groups.filter(name='Менеджер').exists()
 
 
 @login_required
 @user_passes_test(is_client)
 def client_view(request):
-    machines = Machine.objects.filter(customer=request.user).order_by('shipment_date')
-    maintenances = Maintenance.objects.filter(machine__customer=request.user).order_by('maintenance_date')
-    reclamations = Reclamation.objects.filter(machine__customer=request.user).order_by('failure_date')
+    machines = Machine.objects.filter(customer=request.user)
+    maintenances = Maintenance.objects.filter(machine__customer=request.user)
+    reclamations = Reclamation.objects.filter(machine__customer=request.user)
     return render(request, 'inventory/client_view.html', {
         'machines': machines,
         'maintenances': maintenances,
@@ -32,9 +33,9 @@ def client_view(request):
 @login_required
 @user_passes_test(is_service_company)
 def service_company_view(request):
-    machines = Machine.objects.filter(service_company=request.user).order_by('shipment_date')
-    maintenances = Maintenance.objects.filter(service_company=request.user).order_by('maintenance_date')
-    reclamations = Reclamation.objects.filter(service_company=request.user).order_by('failure_date')
+    machines = Machine.objects.filter(service_company=request.user)
+    maintenances = Maintenance.objects.filter(machine__service_company=request.user)
+    reclamations = Reclamation.objects.filter(machine__service_company=request.user)
     return render(request, 'inventory/service_company_view.html', {
         'machines': machines,
         'maintenances': maintenances,
@@ -45,14 +46,31 @@ def service_company_view(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_view(request):
-    machines = Machine.objects.all().order_by('shipment_date')
-    maintenances = Maintenance.objects.all().order_by('maintenance_date')
-    reclamations = Reclamation.objects.all().order_by('failure_date')
+    machines = Machine.objects.all()
+    maintenances = Maintenance.objects.all()
+    reclamations = Reclamation.objects.all()
     return render(request, 'inventory/manager_view.html', {
         'machines': machines,
         'maintenances': maintenances,
         'reclamations': reclamations
     })
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            auth_login(request, user)
+            if user.groups.filter(name='Клиент').exists():
+                return redirect('client_view')
+            elif user.groups.filter(name='Сервисная организация').exists():
+                return redirect('service_company_view')
+            elif user.groups.filter(name='Менеджер').exists():
+                return redirect('manager_view')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form})
 
 
 def search_machine(request):
@@ -63,22 +81,22 @@ def search_machine(request):
 
 @login_required
 def machine_detail_view(request, machine_id):
-    machine = Machine.objects.get(id=machine_id)
+    machine = get_object_or_404(Machine, id=machine_id)
     return render(request, 'inventory/machine_detail.html', {'machine': machine})
 
 
 @login_required
 def main_view(request):
     user = request.user
-    if user.groups.filter(name='client').exists():
+    if user.groups.filter(name='Клиент').exists():
         machines = Machine.objects.filter(customer=user).order_by('shipment_date')
         maintenances = Maintenance.objects.filter(machine__customer=user).order_by('maintenance_date')
         reclamations = Reclamation.objects.filter(machine__customer=user).order_by('failure_date')
-    elif user.groups.filter(name='service_company').exists():
+    elif user.groups.filter(name='Сервисная организация').exists():
         machines = Machine.objects.filter(service_company=user).order_by('shipment_date')
         maintenances = Maintenance.objects.filter(service_company=user).order_by('maintenance_date')
         reclamations = Reclamation.objects.filter(service_company=user).order_by('failure_date')
-    else:  # Manager or other roles
+    else:
         machines = Machine.objects.all().order_by('shipment_date')
         maintenances = Maintenance.objects.all().order_by('maintenance_date')
         reclamations = Reclamation.objects.all().order_by('failure_date')
@@ -100,33 +118,38 @@ def index_view(request):
     return render(request, 'inventory/index.html')
 
 
-def machine_search_view(request):
-    query = request.GET.get('serial_number')
-    machine = Machine.objects.filter(serial_number=query).first()
-    if machine:
-        return render(request, 'inventory/machine_search_result.html', {'machine': machine})
-    else:
-        return render(request, 'inventory/machine_search_result.html',
-                      {'error': 'Данных о машине с таким заводским номером нет в системе.'})
-
-
 @login_required
 def dashboard_view(request):
     user = request.user
-    machines = Machine.objects.filter(owner=user)
-    maintenances = Maintenance.objects.filter(machine__in=machines)
-    reclamations = Reclamation.objects.filter(machine__in=machines)
-    return render(request, 'inventory/dashboard.html', {
+
+    model_technique = request.GET.get('model_technique')
+    model_engine = request.GET.get('model_engine')
+    model_transmission = request.GET.get('model_transmission')
+
+    machines = Machine.objects.all()
+    if model_technique:
+        machines = machines.filter(model_technique=model_technique)
+    if model_engine:
+        machines = machines.filter(model_engine=model_engine)
+    if model_transmission:
+        machines = machines.filter(model_transmission=model_transmission)
+
+    if user.groups.filter(name='Клиент').exists():
+        machines = machines.filter(customer=user)
+    elif user.groups.filter(name='Сервисная организация').exists():
+        machines = machines.filter(service_company=user)
+
+    context = {
+        'user': user,
         'machines': machines,
-        'maintenances': maintenances,
-        'reclamations': reclamations
-    })
+        'maintenances': Maintenance.objects.filter(machine__in=machines),
+        'reclamations': Reclamation.objects.filter(machine__in=machines),
+        'model_techniques': Machine.objects.values_list('model_technique', flat=True).distinct(),
+        'model_engines': Machine.objects.values_list('model_engine', flat=True).distinct(),
+        'model_transmissions': Machine.objects.values_list('model_transmission', flat=True).distinct(),
+    }
 
-
-@login_required
-def machine_detail_view(request, id):
-    machine = get_object_or_404(Machine, id=id)
-    return render(request, 'inventory/machine_detail.html', {'machine': machine})
+    return render(request, 'inventory/dashboard.html', context)
 
 
 @login_required
