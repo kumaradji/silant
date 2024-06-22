@@ -73,12 +73,6 @@ def login_view(request):
     return render(request, 'registration/login.html', {'form': form})
 
 
-def search_machine(request):
-    serial_number = request.GET.get('serial_number')
-    machines = Machine.objects.filter(serial_number=serial_number) if serial_number else None
-    return render(request, 'inventory/search_machine.html', {'machines': machines})
-
-
 @login_required
 def machine_detail_view(request, machine_id):
     machine = get_object_or_404(Machine, id=machine_id)
@@ -108,16 +102,10 @@ def main_view(request):
     })
 
 
-
 def welcome_view(request):
     serial_number = request.GET.get('serial_number')
     machines = Machine.objects.filter(serial_number=serial_number) if serial_number else None
     return render(request, 'inventory/welcome.html', {'machines': machines})
-
-
-
-def index_view(request):
-    return render(request, 'inventory/index.html')
 
 
 @login_required
@@ -152,15 +140,3 @@ def dashboard_view(request):
     }
 
     return render(request, 'inventory/dashboard.html', context)
-
-
-@login_required
-def maintenance_detail_view(request, id):
-    maintenance = get_object_or_404(Maintenance, id=id)
-    return render(request, 'inventory/maintenance_detail.html', {'maintenance': maintenance})
-
-
-@login_required
-def reclamation_detail_view(request, id):
-    reclamation = get_object_or_404(Reclamation, id=id)
-    return render(request, 'inventory/reclamation_detail.html', {'reclamation': reclamation})

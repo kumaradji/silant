@@ -1,36 +1,16 @@
-<!-- inventory/templates/inventory/machine_detail.html -->
-{% extends 'inventory/base.html' %}
-
-{% block title %}Детали Машины{% endblock %}
+{% extends 'base.html' %}
 
 {% block content %}
-<header>
-    <div>
-        <img src="{% static 'path_to_logo.png' %}" alt="логотип">
-        <span>+7-8352-20-12-09, telegram</span>
-        <a href="{% url 'logout' %}">выход</a>
-    </div>
-    <h1>Электронная сервисная книжка "Мой Силант"</h1>
-</header>
-<main>
-    <section>
-        <h2>Детали Машины</h2>
-        <p><strong>Модель техники:</strong> {{ machine.model_technique }}</p>
-        <p><strong>Зав. № машины:</strong> {{ machine.serial_number }}</p>
-        <p><strong>Модель двигателя:</strong> {{ machine.model_engine }}</p>
-        <p><strong>Модель трансмиссии:</strong> {{ machine.model_transmission }}</p>
-        <p><strong>Модель ведущего моста:</strong> {{ machine.model_drive_axle }}</p>
-        <p><strong>Модель управляемого моста:</strong> {{ machine.model_steering_axle }}</p>
-        <p><strong>Дата отгрузки с завода:</strong> {{ machine.shipment_date }}</p>
-        <p><strong>Покупатель:</strong> {{ machine.customer.username }}</p>
-        <p><strong>Сервисная компания:</strong> {{ machine.service_company.username }}</p>
-        <p><strong>Адрес поставки:</strong> {{ machine.delivery_contract }}</p>
-    </section>
-</main>
-<footer>
-    <div>
-        <span>+7-8352-20-12-09, telegram</span>
-        <span>Мой Силант 2022</span>
-    </div>
-</footer>
+  <h2>Машина {{ machine.serial_number }}</h2>
+  <p><strong>Модель техники:</strong> {{ machine.model_technique }}</p>
+  <p><strong>Модель двигателя:</strong> {{ machine.model_engine }}</p>
+  <p><strong>Модель трансмиссии:</strong> {{ machine.model_transmission }}</p>
+  <p><strong>Модель ведущего моста:</strong> {{ machine.model_drive_axle }}</p>
+  <p><strong>Модель управляемого моста:</strong> {{ machine.model_steering_axle }}</p>
+  <p><strong>Дата отгрузки с завода:</strong> {{ machine.shipment_date }}</p>
+  <p><strong>Покупатель:</strong> {{ machine.customer }}</p>
+  <p><strong>Грузополучатель (конечный потребитель):</strong> {{ machine.consignee }}</p>
+  <p><strong>Адрес поставки (эксплуатации):</strong> {{ machine.delivery_address }}</p>
+  <p><strong>Комплектация (доп. опции):</strong> {{ machine.configuration }}</p>
+  <p><strong>Сервисная компания:</strong> {{ machine.service_company }}</p>
 {% endblock %}
