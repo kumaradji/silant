@@ -11,17 +11,47 @@ from .filters import MachineFilter, MaintenanceFilter, ReclamationFilter
 
 
 @csrf_exempt
+def save_machines(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        for item in data:
+            machine = Machine.objects.get(id=item['id'])
+            machine.model_technique = item['model_technique']
+            machine.serial_number = item['serial_number']
+            machine.model_engine = item['model_engine']
+            machine.model_transmission = item['model_transmission']
+            machine.model_drive_axle = item['model_drive_axle']
+            machine.model_steering_axle = item['model_steering_axle']
+            machine.shipment_date = item['shipment_date']
+            machine.save()
+        return JsonResponse({'status': 'success'})
+
+
+@csrf_exempt
 def save_maintenances(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         for item in data:
-            maintenance = Maintenance.objects.get(pk=item['id'])
+            maintenance = Maintenance.objects.get(id=item['id'])
             maintenance.maintenance_type = item['maintenance_type']
             maintenance.maintenance_date = item['maintenance_date']
             maintenance.operating_time = item['operating_time']
             maintenance.save()
         return JsonResponse({'status': 'success'})
-    return JsonResponse({'status': 'error'}, status=400)
+
+
+@csrf_exempt
+def save_reclamations(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        for item in data:
+            reclamation = Reclamation.objects.get(id=item['id'])
+            reclamation.failure_date = item['failure_date']
+            reclamation.operating_time = item['operating_time']
+            reclamation.failure_unit = item['failure_unit']
+            reclamation.recovery_method = item['recovery_method']
+            reclamation.save()
+        return JsonResponse({'status': 'success'})
 
 
 def is_client(user):

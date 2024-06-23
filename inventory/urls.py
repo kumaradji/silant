@@ -1,5 +1,4 @@
 from django.urls import path
-from . import views
 from .views import (
     welcome_view,
     client_view,
@@ -9,6 +8,9 @@ from .views import (
     machine_detail_view,
     maintenance_detail_view,
     reclamation_detail_view,
+    save_machines,
+    save_maintenances,
+    save_reclamations,
     login_view
 )
 
@@ -22,5 +24,7 @@ urlpatterns = [
     path('maintenance/<int:maintenance_id>/', maintenance_detail_view, name='maintenance_detail'),
     path('reclamation/<int:reclamation_id>/', reclamation_detail_view, name='reclamation_detail'),
     path('login/', login_view, name='login'),
-    path('save-maintenance/', views.save_maintenances, name='save_maintenances'),
+    path('save_machines/', save_machines, name='save_machines'),
+    path('save_maintenances/', save_maintenances, name='save_maintenances'),
+    path('save_reclamations/', save_reclamations, name='save_reclamations'),
 ]

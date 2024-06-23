@@ -66,7 +66,7 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <button id="save-button">Сохранить изменения</button>
+            <button id="save-maintenance-button" style="display:none;">Сохранить изменения</button>
         </div>
 
         <div id="reclamations" class="tab-content">
@@ -111,7 +111,18 @@ function showTab(tabId) {
 // Show the default tab
 showTab('machines');
 
-document.getElementById('save-button').addEventListener('click', function() {
+function showSaveButton(tableId, buttonId) {
+    var table = document.getElementById(tableId);
+    var button = document.getElementById(buttonId);
+
+    table.addEventListener('input', function() {
+        button.style.display = 'block';
+    });
+}
+
+showSaveButton('maintenances', 'save-maintenance-button');
+
+document.getElementById('save-maintenance-button').addEventListener('click', function() {
     let rows = document.querySelectorAll('#maintenances tbody tr');
     let data = [];
 
@@ -136,6 +147,7 @@ document.getElementById('save-button').addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         alert('Changes saved successfully!');
+        document.getElementById('save-maintenance-button').style.display = 'none';
     })
     .catch((error) => {
         console.error('Error:', error);

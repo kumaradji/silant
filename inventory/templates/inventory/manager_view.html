@@ -14,86 +14,89 @@
 
         <div id="machines" class="tab-content active">
             <h2>Машины</h2>
-            <table>
+            <table id="machines">
                 <thead>
-                    <tr>
-                        <th><a href="?order_by=model_technique">Модель техники</a></th>
-                        <th><a href="?order_by=serial_number">Зав. № машины</a></th>
-                        <th><a href="?order_by=model_engine">Модель двигателя</a></th>
-                        <th><a href="?order_by=model_transmission">Модель трансмиссии</a></th>
-                        <th><a href="?order_by=model_drive_axle">Модель ведущего моста</a></th>
-                        <th><a href="?order_by=model_steering_axle">Модель управляемого моста</a></th>
-                        <th><a href="?order_by=shipment_date">Дата отгрузки с завода</a></th>
-                    </tr>
+                <tr class="table-header">
+                    <th><a href="?order_by=model_technique">Модель техники</a></th>
+                    <th><a href="?order_by=serial_number">Зав. № машины</a></th>
+                    <th><a href="?order_by=model_engine">Модель двигателя</a></th>
+                    <th><a href="?order_by=model_transmission">Модель трансмиссии</a></th>
+                    <th><a href="?order_by=model_drive_axle">Модель ведущего моста</a></th>
+                    <th><a href="?order_by=model_steering_axle">Модель управляемого моста</a></th>
+                    <th><a href="?order_by=shipment_date">Дата отгрузки с завода</a></th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for machine in machines %}
-                    <tr onclick="location.href='{% url 'machine_detail' machine.id %}'">
-                        <td>{{ machine.model_technique }}</td>
-                        <td>{{ machine.serial_number }}</td>
-                        <td>{{ machine.model_engine }}</td>
-                        <td>{{ machine.model_transmission }}</td>
-                        <td>{{ machine.model_drive_axle }}</td>
-                        <td>{{ machine.model_steering_axle }}</td>
-                        <td>{{ machine.shipment_date }}</td>
-                    </tr>
-                    {% endfor %}
+                {% for machine in machines %}
+                <tr data-id="{{ machine.id }}">
+                    <td contenteditable="true" class="editable">{{ machine.model_technique }}</td>
+                    <td contenteditable="true" class="editable">{{ machine.serial_number }}</td>
+                    <td contenteditable="true" class="editable">{{ machine.model_engine }}</td>
+                    <td contenteditable="true" class="editable">{{ machine.model_transmission }}</td>
+                    <td contenteditable="true" class="editable">{{ machine.model_drive_axle }}</td>
+                    <td contenteditable="true" class="editable">{{ machine.model_steering_axle }}</td>
+                    <td contenteditable="true" class="editable">{{ machine.shipment_date }}</td>
+                </tr>
+                {% endfor %}
                 </tbody>
             </table>
+            <button id="save-machines-button" style="display: none;">Сохранить изменения в машинах</button>
         </div>
 
         <div id="maintenances" class="tab-content">
             <h2>Техническое обслуживание</h2>
-            <table>
+            <table id="maintenances">
                 <thead>
-                    <tr>
-                        <th><a href="?order_by=machine__serial_number">Машина</a></th>
-                        <th><a href="?order_by=maintenance_type">Вид ТО</a></th>
-                        <th><a href="?order_by=maintenance_date">Дата проведения ТО</a></th>
-                        <th><a href="?order_by=operating_time">Наработка, м/час</a></th>
-                        <th><a href="?order_by=service_company__first_name">Сервисная компания</a></th>
-                    </tr>
+                <tr class="table-header">
+                    <th><a href="?order_by=machine__serial_number">Машина</a></th>
+                    <th><a href="?order_by=maintenance_type">Вид ТО</a></th>
+                    <th><a href="?order_by=maintenance_date">Дата проведения ТО</a></th>
+                    <th><a href="?order_by=operating_time">Наработка, м/час</a></th>
+                    <th><a href="?order_by=service_company__first_name">Сервисная компания</a></th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for maintenance in maintenances %}
-                    <tr onclick="location.href='{% url 'maintenance_detail' maintenance.id %}'">
-                        <td>{{ maintenance.machine.serial_number }}</td>
-                        <td>{{ maintenance.maintenance_type }}</td>
-                        <td>{{ maintenance.maintenance_date }}</td>
-                        <td>{{ maintenance.operating_time }}</td>
-                        <td>{{ maintenance.service_company.first_name }}</td>
-                    </tr>
-                    {% endfor %}
+                {% for maintenance in maintenances %}
+                <tr data-id="{{ maintenance.id }}">
+                    <td>{{ maintenance.machine.serial_number }}</td>
+                    <td contenteditable="true" class="editable">{{ maintenance.maintenance_type }}</td>
+                    <td contenteditable="true" class="editable">{{ maintenance.maintenance_date }}</td>
+                    <td contenteditable="true" class="editable">{{ maintenance.operating_time }}</td>
+                    <td>{{ maintenance.service_company.first_name }}</td>
+                </tr>
+                {% endfor %}
                 </tbody>
             </table>
+            <button id="save-maintenance-button" style="display: none;">Сохранить изменения в ТО</button>
         </div>
 
         <div id="reclamations" class="tab-content">
             <h2>Рекламации</h2>
-            <table>
+            <table id="reclamations">
                 <thead>
-                    <tr>
-                        <th><a href="?order_by=machine__serial_number">Машина</a></th>
-                        <th><a href="?order_by=failure_date">Дата отказа</a></th>
-                        <th><a href="?order_by=operating_time">Наработка, м/час</a></th>
-                        <th><a href="?order_by=failure_unit">Узел отказа</a></th>
-                        <th><a href="?order_by=recovery_method">Способ восстановления</a></th>
-                        <th><a href="?order_by=service_company__first_name">Сервисная компания</a></th>
-                    </tr>
+                <tr class="table-header">
+                    <th><a href="?order_by=machine__serial_number">Машина</a></th>
+                    <th><a href="?order_by=failure_date">Дата отказа</a></th>
+                    <th><a href="?order_by=operating_time">Наработка, м/час</a></th>
+                    <th><a href="?order_by=failure_unit">Узел отказа</a></th>
+                    <th><a href="?order_by=recovery_method">Способ восстановления</a></th>
+                    <th><a href="?order_by=service_company__first_name">Сервисная компания</a></th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for reclamation in reclamations %}
-                    <tr onclick="location.href='{% url 'reclamation_detail' reclamation.id %}'">
-                        <td>{{ reclamation.machine.serial_number }}</td>
-                        <td>{{ reclamation.failure_date }}</td>
-                        <td>{{ reclamation.operating_time }}</td>
-                        <td>{{ reclamation.failure_unit }}</td>
-                        <td>{{ reclamation.recovery_method }}</td>
-                        <td>{{ reclamation.service_company.first_name }}</td>
-                    </tr>
-                    {% endfor %}
+                {% for reclamation in reclamations %}
+                <tr data-id="{{ reclamation.id }}">
+                    <td>{{ reclamation.machine.serial_number }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.failure_date }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.operating_time }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.failure_unit }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.recovery_method }}</td>
+                    <td>{{ reclamation.service_company.first_name }}</td>
+                </tr>
+                {% endfor %}
                 </tbody>
             </table>
+            <button id="save-reclamation-button" style="display: none;">Сохранить изменения в рекламациях</button>
         </div>
     </section>
 </main>
@@ -109,5 +112,119 @@ function showTab(tabId) {
 
 // Show the default tab
 showTab('machines');
+
+function showSaveButton(tableId, buttonId) {
+    var table = document.getElementById(tableId);
+    var button = document.getElementById(buttonId);
+
+    table.addEventListener('input', function() {
+        button.style.display = 'block';
+    });
+}
+
+showSaveButton('machines', 'save-machines-button');
+showSaveButton('maintenances', 'save-maintenance-button');
+showSaveButton('reclamations', 'save-reclamation-button');
+
+document.getElementById('save-machines-button').addEventListener('click', function() {
+    let rows = document.querySelectorAll('#machines tbody tr');
+    let data = [];
+
+    rows.forEach(row => {
+        let rowData = {
+            id: row.getAttribute('data-id'),
+            model_technique: row.cells[0].innerText,
+            serial_number: row.cells[1].innerText,
+            model_engine: row.cells[2].innerText,
+            model_transmission: row.cells[3].innerText,
+            model_drive_axle: row.cells[4].innerText,
+            model_steering_axle: row.cells[5].innerText,
+            shipment_date: row.cells[6].innerText
+        };
+        data.push(rowData);
+    });
+
+    fetch('{% url "save_machines" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Changes saved successfully!');
+        document.getElementById('save-machines-button').style.display = 'none';
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
+
+document.getElementById('save-maintenance-button').addEventListener('click', function() {
+    let rows = document.querySelectorAll('#maintenances tbody tr');
+    let data = [];
+
+    rows.forEach(row => {
+        let rowData = {
+            id: row.getAttribute('data-id'),
+            maintenance_type: row.cells[1].innerText,
+            maintenance_date: row.cells[2].innerText,
+            operating_time: row.cells[3].innerText
+        };
+        data.push(rowData);
+    });
+
+    fetch('{% url "save_maintenances" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Changes saved successfully!');
+        document.getElementById('save-maintenance-button').style.display = 'none';
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
+
+document.getElementById('save-reclamation-button').addEventListener('click', function() {
+    let rows = document.querySelectorAll('#reclamations tbody tr');
+    let data = [];
+
+    rows.forEach(row => {
+        let rowData = {
+            id: row.getAttribute('data-id'),
+            failure_date: row.cells[1].innerText,
+            operating_time: row.cells[2].innerText,
+            failure_unit: row.cells[3].innerText,
+            recovery_method: row.cells[4].innerText
+        };
+        data.push(rowData);
+    });
+
+    fetch('{% url "save_reclamations" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Changes saved successfully!');
+        document.getElementById('save-reclamation-button').style.display = 'none';
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
 </script>
 {% endblock %}

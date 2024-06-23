@@ -28,7 +28,7 @@
                 </thead>
                 <tbody>
                 {% for machine in machines %}
-                <tr onclick="location.href='{% url 'machine_detail' machine.id %}'">
+                <tr>
                     <td>{{ machine.model_technique }}</td>
                     <td>{{ machine.serial_number }}</td>
                     <td>{{ machine.model_engine }}</td>
@@ -46,7 +46,7 @@
             <h2>Техническое обслуживание</h2>
             <table>
                 <thead>
-                <tr>
+                <tr class="table-header">
                     <th><a href="?order_by=machine__serial_number">Машина</a></th>
                     <th><a href="?order_by=maintenance_type">Вид ТО</a></th>
                     <th><a href="?order_by=maintenance_date">Дата проведения ТО</a></th>
@@ -56,23 +56,24 @@
                 </thead>
                 <tbody>
                 {% for maintenance in maintenances %}
-                <tr onclick="location.href='{% url 'maintenance_detail' maintenance.id %}'">
+                <tr data-id="{{ maintenance.id }}">
                     <td>{{ maintenance.machine.serial_number }}</td>
-                    <td>{{ maintenance.maintenance_type }}</td>
-                    <td>{{ maintenance.maintenance_date }}</td>
-                    <td>{{ maintenance.operating_time }}</td>
+                    <td contenteditable="true" class="editable">{{ maintenance.maintenance_type }}</td>
+                    <td contenteditable="true" class="editable">{{ maintenance.maintenance_date }}</td>
+                    <td contenteditable="true" class="editable">{{ maintenance.operating_time }}</td>
                     <td>{{ maintenance.service_company.first_name }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
+            <button id="save-maintenance-button" style="display:none;">Сохранить изменения в ТО</button>
         </div>
 
         <div id="reclamations" class="tab-content">
             <h2>Рекламации</h2>
             <table>
                 <thead>
-                <tr>
+                <tr class="table-header">
                     <th><a href="?order_by=machine__serial_number">Машина</a></th>
                     <th><a href="?order_by=failure_date">Дата отказа</a></th>
                     <th><a href="?order_by=operating_time">Наработка, м/час</a></th>
@@ -83,17 +84,18 @@
                 </thead>
                 <tbody>
                 {% for reclamation in reclamations %}
-                <tr onclick="location.href='{% url 'reclamation_detail' reclamation.id %}'">
+                <tr data-id="{{ reclamation.id }}">
                     <td>{{ reclamation.machine.serial_number }}</td>
-                    <td>{{ reclamation.failure_date }}</td>
-                    <td>{{ reclamation.operating_time }}</td>
-                    <td>{{ reclamation.failure_unit }}</td>
-                    <td>{{ reclamation.recovery_method }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.failure_date }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.operating_time }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.failure_unit }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.recovery_method }}</td>
                     <td>{{ reclamation.service_company.first_name }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
+            <button id="save-reclamation-button" style="display:none;">Сохранить изменения в рекламациях</button>
         </div>
     </section>
 </main>
@@ -110,5 +112,81 @@ function showTab(tabId) {
 // Show the default tab
 showTab('machines');
 
+function showSaveButton(tableId, buttonId) {
+    var table = document.getElementById(tableId);
+    var button = document.getElementById(buttonId);
+
+    table.addEventListener('input', function() {
+        button.style.display = 'block';
+    });
+}
+
+showSaveButton('maintenances', 'save-maintenance-button');
+showSaveButton('reclamations', 'save-reclamation-button');
+
+document.getElementById('save-maintenance-button').addEventListener('click', function() {
+    let rows = document.querySelectorAll('#maintenances tbody tr');
+    let data = [];
+
+    rows.forEach(row => {
+        let rowData = {
+            id: row.getAttribute('data-id'),
+            maintenance_type: row.cells[1].innerText,
+            maintenance_date: row.cells[2].innerText,
+            operating_time: row.cells[3].innerText
+        };
+        data.push(rowData);
+    });
+
+    fetch('{% url "save_maintenances" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Changes saved successfully!');
+        document.getElementById('save-maintenance-button').style.display = 'none';
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
+
+document.getElementById('save-reclamation-button').addEventListener('click', function() {
+    let rows = document.querySelectorAll('#reclamations tbody tr');
+    let data = [];
+
+    rows.forEach(row => {
+        let rowData = {
+            id: row.getAttribute('data-id'),
+            failure_date: row.cells[1].innerText,
+            operating_time: row.cells[2].innerText,
+            failure_unit: row.cells[3].innerText,
+            recovery_method: row.cells[4].innerText
+        };
+        data.push(rowData);
+    });
+
+    fetch('{% url "save_reclamations" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Changes saved successfully!');
+        document.getElementById('save-reclamation-button').style.display = 'none';
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
 </script>
 {% endblock %}
