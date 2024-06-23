@@ -1,19 +1,12 @@
-<!-- inventory/templates/inventory/welcome.html -->
 {% extends 'inventory/base.html' %}
 {% load static %}
 
-{% block title %}Главная страница{% endblock %}
+{% block title %}Машины{% endblock %}
 
 {% block content %}
-<main class="main-container">
-    <section class="form-container">
-        <form method="get" action="{% url 'welcome' %}">
-            <label for="serial_number">Заводской номер:</label>
-            <input type="text" id="serial_number" name="serial_number" required>
-            <button type="submit">Поиск</button>
-        </form>
-        {% if machines %}
-        <h2>Результат поиска</h2>
+<main>
+    <section class="main-container">
+        <h1>Машины</h1>
         <table>
             <thead>
                 <tr>
@@ -31,7 +24,7 @@
             </thead>
             <tbody>
                 {% for machine in machines %}
-                <tr>
+                <tr onclick="location.href='{% url 'machine_detail' machine.id %}'">
                     <td>{{ machine.model_technique }}</td>
                     <td>{{ machine.serial_number }}</td>
                     <td>{{ machine.model_engine }}</td>
@@ -39,16 +32,13 @@
                     <td>{{ machine.model_drive_axle }}</td>
                     <td>{{ machine.model_steering_axle }}</td>
                     <td>{{ machine.shipment_date }}</td>
-                    <td>{{ machine.customer }}</td>
-                    <td>{{ machine.service_company }}</td>
+                    <td>{{ machine.customer.first_name }}</td>
+                    <td>{{ machine.service_company.first_name }}</td>
                     <td>{{ machine.delivery_contract }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        {% else %}
-        <p>Введите заводской номер для поиска информации о машине.</p>
-        {% endif %}
     </section>
 </main>
 {% endblock %}

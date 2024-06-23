@@ -6,7 +6,8 @@ from .views import (
     manager_view,
     main_view,
     machine_detail_view,
-    dashboard_view,
+    maintenance_detail_view,
+    reclamation_detail_view,
     login_view
 )
 
@@ -17,6 +18,7 @@ urlpatterns = [
     path('manager_view/', manager_view, name='manager_view'),
     path('main/', main_view, name='main'),
     path('machine/<int:machine_id>/', machine_detail_view, name='machine_detail'),
-    path('dashboard/', dashboard_view, name='dashboard'),
+    path('maintenance/<int:maintenance_id>/', maintenance_detail_view, name='maintenance_detail'),
+    path('reclamation/<int:reclamation_id>/', reclamation_detail_view, name='reclamation_detail'),
     path('login/', login_view, name='login'),
 ]

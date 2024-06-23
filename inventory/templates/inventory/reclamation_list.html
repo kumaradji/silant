@@ -1,0 +1,44 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+
+{% block title %}Рекламации{% endblock %}
+
+{% block content %}
+<main>
+    <section class="main-container">
+        <h1>Рекламации</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Зав. № машины</th>
+                    <th>Дата отказа</th>
+                    <th>Наработка</th>
+                    <th>Узел отказа</th>
+                    <th>Описание отказа</th>
+                    <th>Способ восстановления</th>
+                    <th>Используемые запчасти</th>
+                    <th>Дата восстановления</th>
+                    <th>Время простоя</th>
+                    <th>Сервисная компания</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reclamation in reclamations %}
+                <tr onclick="location.href='{% url 'reclamation_detail' reclamation.id %}'">
+                    <td>{{ reclamation.machine.serial_number }}</td>
+                    <td>{{ reclamation.failure_date }}</td>
+                    <td>{{ reclamation.operating_time }}</td>
+                    <td>{{ reclamation.failure_unit }}</td>
+                    <td>{{ reclamation.failure_description }}</td>
+                    <td>{{ reclamation.recovery_method }}</td>
+                    <td>{{ reclamation.used_spare_parts }}</td>
+                    <td>{{ reclamation.recovery_date }}</td>
+                    <td>{{ reclamation.downtime }}</td>
+                    <td>{{ reclamation.service_company.first_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+{% endblock %}

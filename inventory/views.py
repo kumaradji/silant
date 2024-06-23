@@ -3,6 +3,7 @@ from django.contrib.auth import login as auth_login
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Machine, Maintenance, Reclamation
+from .filters import MachineFilter, MaintenanceFilter, ReclamationFilter
 
 
 def is_client(user):
@@ -80,25 +81,38 @@ def machine_detail_view(request, machine_id):
 
 
 @login_required
+def maintenance_detail_view(request, maintenance_id):
+    maintenance = get_object_or_404(Maintenance, id=maintenance_id)
+    return render(request, 'inventory/maintenance_detail.html', {'maintenance': maintenance})
+
+
+@login_required
+def reclamation_detail_view(request, reclamation_id):
+    reclamation = get_object_or_404(Reclamation, id=reclamation_id)
+    return render(request, 'inventory/reclamation_detail.html', {'reclamation': reclamation})
+
+
+@login_required
 def main_view(request):
     user = request.user
+
+    machine_filter = MachineFilter(request.GET, queryset=Machine.objects.all())
+    maintenance_filter = MaintenanceFilter(request.GET, queryset=Maintenance.objects.all())
+    reclamation_filter = ReclamationFilter(request.GET, queryset=Reclamation.objects.all())
+
     if user.groups.filter(name='Клиент').exists():
-        machines = Machine.objects.filter(customer=user).order_by('shipment_date')
-        maintenances = Maintenance.objects.filter(machine__customer=user).order_by('maintenance_date')
-        reclamations = Reclamation.objects.filter(machine__customer=user).order_by('failure_date')
+        machine_filter = MachineFilter(request.GET, queryset=Machine.objects.filter(customer=user))
+        maintenance_filter = MaintenanceFilter(request.GET, queryset=Maintenance.objects.filter(machine__customer=user))
+        reclamation_filter = ReclamationFilter(request.GET, queryset=Reclamation.objects.filter(machine__customer=user))
     elif user.groups.filter(name='Сервисная организация').exists():
-        machines = Machine.objects.filter(service_company=user).order_by('shipment_date')
-        maintenances = Maintenance.objects.filter(service_company=user).order_by('maintenance_date')
-        reclamations = Reclamation.objects.filter(service_company=user).order_by('failure_date')
-    else:  # Manager or other roles
-        machines = Machine.objects.all().order_by('shipment_date')
-        maintenances = Maintenance.objects.all().order_by('maintenance_date')
-        reclamations = Reclamation.objects.all().order_by('failure_date')
+        machine_filter = MachineFilter(request.GET, queryset=Machine.objects.filter(service_company=user))
+        maintenance_filter = MaintenanceFilter(request.GET, queryset=Maintenance.objects.filter(service_company=user))
+        reclamation_filter = ReclamationFilter(request.GET, queryset=Reclamation.objects.filter(service_company=user))
 
     return render(request, 'inventory/main.html', {
-        'machines': machines,
-        'maintenances': maintenances,
-        'reclamations': reclamations
+        'machine_filter': machine_filter,
+        'maintenance_filter': maintenance_filter,
+        'reclamation_filter': reclamation_filter,
     })
 
 
@@ -106,37 +120,3 @@ def welcome_view(request):
     serial_number = request.GET.get('serial_number')
     machines = Machine.objects.filter(serial_number=serial_number) if serial_number else None
     return render(request, 'inventory/welcome.html', {'machines': machines})
-
-
-@login_required
-def dashboard_view(request):
-    user = request.user
-
-    model_technique = request.GET.get('model_technique')
-    model_engine = request.GET.get('model_engine')
-    model_transmission = request.GET.get('model_transmission')
-
-    machines = Machine.objects.all()
-    if model_technique:
-        machines = machines.filter(model_technique=model_technique)
-    if model_engine:
-        machines = machines.filter(model_engine=model_engine)
-    if model_transmission:
-        machines = machines.filter(model_transmission=model_transmission)
-
-    if user.groups.filter(name='Клиент').exists():
-        machines = machines.filter(customer=user)
-    elif user.groups.filter(name='Сервисная организация').exists():
-        machines = machines.filter(service_company=user)
-
-    context = {
-        'user': user,
-        'machines': machines,
-        'maintenances': Maintenance.objects.filter(machine__in=machines),
-        'reclamations': Reclamation.objects.filter(machine__in=machines),
-        'model_techniques': Machine.objects.values_list('model_technique', flat=True).distinct(),
-        'model_engines': Machine.objects.values_list('model_engine', flat=True).distinct(),
-        'model_transmissions': Machine.objects.values_list('model_transmission', flat=True).distinct(),
-    }
-
-    return render(request, 'inventory/dashboard.html', context)
