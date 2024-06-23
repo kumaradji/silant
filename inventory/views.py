@@ -1,9 +1,27 @@
+# views.py
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Machine, Maintenance, Reclamation
 from .filters import MachineFilter, MaintenanceFilter, ReclamationFilter
+
+
+@csrf_exempt
+def save_maintenances(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        for item in data:
+            maintenance = Maintenance.objects.get(pk=item['id'])
+            maintenance.maintenance_type = item['maintenance_type']
+            maintenance.maintenance_date = item['maintenance_date']
+            maintenance.operating_time = item['operating_time']
+            maintenance.save()
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)
 
 
 def is_client(user):
@@ -118,5 +136,17 @@ def main_view(request):
 
 def welcome_view(request):
     serial_number = request.GET.get('serial_number')
-    machines = Machine.objects.filter(serial_number=serial_number) if serial_number else None
-    return render(request, 'inventory/welcome.html', {'machines': machines})
+    machines = []
+    search_performed = False
+
+    if serial_number:
+        machines = Machine.objects.filter(serial_number=serial_number)
+        search_performed = True
+
+    all_machines = Machine.objects.all()[:10]  # Показать ограниченное количество машин для всех пользователей
+    context = {
+        'machines': machines,
+        'all_machines': all_machines,
+        'search_performed': search_performed,
+    }
+    return render(request, 'inventory/welcome.html', context)

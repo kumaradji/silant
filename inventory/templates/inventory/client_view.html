@@ -28,7 +28,7 @@
                 </thead>
                 <tbody>
                 {% for machine in machines %}
-                <tr onclick="location.href='{% url 'machine_detail' machine.id %}'">
+                <tr>
                     <td>{{ machine.model_technique }}</td>
                     <td>{{ machine.serial_number }}</td>
                     <td>{{ machine.model_engine }}</td>
@@ -56,16 +56,17 @@
                 </thead>
                 <tbody>
                 {% for maintenance in maintenances %}
-                <tr onclick="location.href='{% url 'maintenance_detail' maintenance.id %}'">
+                <tr data-id="{{ maintenance.id }}">
                     <td>{{ maintenance.machine.serial_number }}</td>
-                    <td>{{ maintenance.maintenance_type }}</td>
-                    <td>{{ maintenance.maintenance_date }}</td>
-                    <td>{{ maintenance.operating_time }}</td>
+                    <td contenteditable="true" class="editable">{{ maintenance.maintenance_type }}</td>
+                    <td contenteditable="true" class="editable">{{ maintenance.maintenance_date }}</td>
+                    <td contenteditable="true" class="editable">{{ maintenance.operating_time }}</td>
                     <td>{{ maintenance.service_company.first_name }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
+            <button id="save-button">Сохранить изменения</button>
         </div>
 
         <div id="reclamations" class="tab-content">
@@ -83,7 +84,7 @@
                 </thead>
                 <tbody>
                 {% for reclamation in reclamations %}
-                <tr onclick="location.href='{% url 'reclamation_detail' reclamation.id %}'">
+                <tr>
                     <td>{{ reclamation.machine.serial_number }}</td>
                     <td>{{ reclamation.failure_date }}</td>
                     <td>{{ reclamation.operating_time }}</td>
@@ -110,5 +111,35 @@ function showTab(tabId) {
 // Show the default tab
 showTab('machines');
 
+document.getElementById('save-button').addEventListener('click', function() {
+    let rows = document.querySelectorAll('#maintenances tbody tr');
+    let data = [];
+
+    rows.forEach(row => {
+        let rowData = {
+            id: row.getAttribute('data-id'),
+            maintenance_type: row.cells[1].innerText,
+            maintenance_date: row.cells[2].innerText,
+            operating_time: row.cells[3].innerText
+        };
+        data.push(rowData);
+    });
+
+    fetch('{% url "save_maintenances" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Changes saved successfully!');
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
 </script>
 {% endblock %}
