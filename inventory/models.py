@@ -15,11 +15,14 @@ class Machine(models.Model):
     serial_steering_axle = models.CharField(max_length=128, verbose_name='Зав. № управляемого моста')
     delivery_contract = models.CharField(max_length=128, verbose_name='Договор поставки')
     shipment_date = models.DateField(verbose_name='Дата отгрузки с завода')
-    customer = models.ForeignKey(User, related_name='customer_machines', on_delete=models.CASCADE, verbose_name='Покупатель')
-    consignee = models.ForeignKey(User, related_name='consignee_machines', on_delete=models.CASCADE, verbose_name='Грузополучатель (конечный потребитель)')
+    customer = models.ForeignKey(User, related_name='customer_machines', on_delete=models.CASCADE,
+                                 verbose_name='Покупатель')
+    consignee = models.ForeignKey(User, related_name='consignee_machines', on_delete=models.CASCADE,
+                                  verbose_name='Грузополучатель (конечный потребитель)')
     delivery_address = models.CharField(max_length=128, verbose_name='Адрес поставки (эксплуатации)')
     configuration = models.TextField(verbose_name='Комплектация (доп. опции)')
-    service_company = models.ForeignKey(User, related_name='service_machines', on_delete=models.CASCADE, verbose_name='Сервисная компания')
+    service_company = models.ForeignKey(User, related_name='service_machines', on_delete=models.CASCADE,
+                                        verbose_name='Сервисная компания')
 
     def __str__(self):
         return self.serial_number
