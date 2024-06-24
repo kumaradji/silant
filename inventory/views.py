@@ -85,6 +85,12 @@ def service_company_view(request):
     machines = Machine.objects.filter(service_company=request.user)
     maintenances = Maintenance.objects.filter(machine__service_company=request.user)
     reclamations = Reclamation.objects.filter(machine__service_company=request.user)
+
+    # Debugging output
+    print(f"Machines: {machines}")
+    print(f"Maintenances: {maintenances}")
+    print(f"Reclamations: {reclamations}")
+
     return render(request, 'inventory/service_company_view.html', {
         'machines': machines,
         'maintenances': maintenances,
