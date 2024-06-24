@@ -11,3 +11,5 @@ sqlparse~=0.4.4
 requests~=2.31.0
 setuptools~=69.0.3
 platformdirs~=4.1.0
+
+django-filter
