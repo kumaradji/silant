@@ -139,12 +139,13 @@ function showSaveButton(tableId, buttonId) {
 
     table.addEventListener('input', function() {
         var isChanged = false;
-        table.querySelectorAll('tbody tr').forEach((row, rowIndex) => {
+        table.querySelectorAll('tbody tr').forEach((row, index) => {
             var rowData = Array.from(row.cells).map(cell => cell.innerText);
-            if (JSON.stringify(rowData) !== JSON.stringify(originalData[rowIndex])) {
+            if (JSON.stringify(rowData) !== JSON.stringify(originalData[index])) {
                 isChanged = true;
             }
         });
+
         button.style.display = isChanged ? 'block' : 'none';
     });
 }
@@ -254,5 +255,4 @@ document.getElementById('save-reclamation-button').addEventListener('click', fun
     });
 });
 </script>
-
 {% endblock %}

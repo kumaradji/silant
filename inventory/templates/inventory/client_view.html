@@ -98,10 +98,10 @@
                 {% for reclamation in reclamation_filter.qs %}
                 <tr>
                     <td>{{ reclamation.machine.serial_number }}</td>
-                    <td>{{ reclamation.failure_date }}</td>
-                    <td>{{ reclamation.operating_time }}</td>
-                    <td>{{ reclamation.failure_unit }}</td>
-                    <td>{{ reclamation.recovery_method }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.failure_date }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.operating_time }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.failure_unit }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.recovery_method }}</td>
                     <td>{{ reclamation.service_company.first_name }}</td>
                 </tr>
                 {% endfor %}
@@ -180,11 +180,11 @@ document.getElementById('save-machines-button').addEventListener('click', functi
     })
     .then(response => response.json())
     .then(data => {
-        alert('Changes saved successfully!');
+        alert('Изменения успешно сохранены!');
         document.getElementById('save-machines-button').style.display = 'none';
     })
     .catch((error) => {
-        console.error('Error:', error);
+        console.error('Ошибка:', error);
     });
 });
 
@@ -212,11 +212,11 @@ document.getElementById('save-maintenance-button').addEventListener('click', fun
     })
     .then(response => response.json())
     .then(data => {
-        alert('Changes saved successfully!');
+        alert('Изменения успешно сохранены!');
         document.getElementById('save-maintenance-button').style.display = 'none';
     })
     .catch((error) => {
-        console.error('Error:', error);
+        console.error('Ошибка:', error);
     });
 });
 
@@ -245,13 +245,12 @@ document.getElementById('save-reclamation-button').addEventListener('click', fun
     })
     .then(response => response.json())
     .then(data => {
-        alert('Changes saved successfully!');
+        alert('Изменения успешно сохранены!');
         document.getElementById('save-reclamation-button').style.display = 'none';
     })
     .catch((error) => {
-        console.error('Error:', error);
+        console.error('Ошибка:', error);
     });
 });
 </script>
-
 {% endblock %}

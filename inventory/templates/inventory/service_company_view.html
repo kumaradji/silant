@@ -77,6 +77,7 @@
             <button id="save-maintenance-button" style="display: none;">Сохранить изменения в ТО</button>
         </div>
 
+
         <div id="reclamations" class="tab-content">
             <h2>Рекламации</h2>
             <form method="get">
@@ -245,12 +246,16 @@ document.getElementById('save-reclamation-button').addEventListener('click', fun
     })
     .then(response => response.json())
     .then(data => {
-        alert('Changes saved successfully!');
+        alert('Изменения успешно сохранены!');
         document.getElementById('save-reclamation-button').style.display = 'none';
     })
     .catch((error) => {
         console.error('Error:', error);
     });
 });
+
+
+
+
 </script>
 {% endblock %}
