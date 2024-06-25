@@ -14,6 +14,10 @@
 
         <div id="machines" class="tab-content active">
             <h2>Машины</h2>
+            <form method="get">
+                {{ machine_filter.form.as_p }}
+                <button type="submit">Фильтр</button>
+            </form>
             <table>
                 <thead>
                 <tr class="table-header">
@@ -27,7 +31,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for machine in machines %}
+                {% for machine in machine_filter.qs %}
                 <tr>
                     <td>{{ machine.model_technique }}</td>
                     <td>{{ machine.serial_number }}</td>
@@ -44,6 +48,10 @@
 
         <div id="maintenances" class="tab-content">
             <h2>Техническое обслуживание</h2>
+            <form method="get">
+                {{ maintenance_filter.form.as_p }}
+                <button type="submit">Фильтр</button>
+            </form>
             <table>
                 <thead>
                 <tr class="table-header">
@@ -55,7 +63,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for maintenance in maintenances %}
+                {% for maintenance in maintenance_filter.qs %}
                 <tr data-id="{{ maintenance.id }}">
                     <td>{{ maintenance.machine.serial_number }}</td>
                     <td contenteditable="true" class="editable">{{ maintenance.maintenance_type }}</td>
@@ -66,11 +74,15 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <button id="save-maintenance-button" style="display:none;">Сохранить изменения</button>
+            <button id="save-maintenance-button" style="display:none;">Сохранить изменения в ТО</button>
         </div>
 
         <div id="reclamations" class="tab-content">
             <h2>Рекламации</h2>
+            <form method="get">
+                {{ reclamation_filter.form.as_p }}
+                <button type="submit">Фильтр</button>
+            </form>
             <table>
                 <thead>
                 <tr class="table-header">
@@ -83,7 +95,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for reclamation in reclamations %}
+                {% for reclamation in reclamation_filter.qs %}
                 <tr>
                     <td>{{ reclamation.machine.serial_number }}</td>
                     <td>{{ reclamation.failure_date }}</td>
@@ -95,6 +107,7 @@
                 {% endfor %}
                 </tbody>
             </table>
+            <button id="save-reclamation-button" style="display:none;">Сохранить изменения в рекламациях</button>
         </div>
     </section>
 </main>
@@ -106,21 +119,74 @@ function showTab(tabId) {
         tabs[i].style.display = 'none';
     }
     document.getElementById(tabId).style.display = 'block';
+    localStorage.setItem('activeTab', tabId);
 }
 
 // Show the default tab
-showTab('machines');
+var activeTab = localStorage.getItem('activeTab') || 'machines';
+showTab(activeTab);
 
 function showSaveButton(tableId, buttonId) {
     var table = document.getElementById(tableId);
     var button = document.getElementById(buttonId);
+    var originalData = [];
+
+    table.querySelectorAll('tbody tr').forEach(row => {
+        var rowData = Array.from(row.cells).map(cell => cell.innerText);
+        originalData.push(rowData);
+    });
 
     table.addEventListener('input', function() {
-        button.style.display = 'block';
+        var isChanged = false;
+        table.querySelectorAll('tbody tr').forEach((row, rowIndex) => {
+            var rowData = Array.from(row.cells).map(cell => cell.innerText);
+            if (JSON.stringify(rowData) !== JSON.stringify(originalData[rowIndex])) {
+                isChanged = true;
+            }
+        });
+        button.style.display = isChanged ? 'block' : 'none';
     });
 }
 
+showSaveButton('machines', 'save-machines-button');
 showSaveButton('maintenances', 'save-maintenance-button');
+showSaveButton('reclamations', 'save-reclamation-button');
+
+document.getElementById('save-machines-button').addEventListener('click', function() {
+    let rows = document.querySelectorAll('#machines tbody tr');
+    let data = [];
+
+    rows.forEach(row => {
+        let rowData = {
+            id: row.getAttribute('data-id'),
+            model_technique: row.cells[0].innerText,
+            serial_number: row.cells[1].innerText,
+            model_engine: row.cells[2].innerText,
+            model_transmission: row.cells[3].innerText,
+            model_drive_axle: row.cells[4].innerText,
+            model_steering_axle: row.cells[5].innerText,
+            shipment_date: row.cells[6].innerText
+        };
+        data.push(rowData);
+    });
+
+    fetch('{% url "save_machines" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Changes saved successfully!');
+        document.getElementById('save-machines-button').style.display = 'none';
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
 
 document.getElementById('save-maintenance-button').addEventListener('click', function() {
     let rows = document.querySelectorAll('#maintenances tbody tr');
@@ -153,5 +219,39 @@ document.getElementById('save-maintenance-button').addEventListener('click', fun
         console.error('Error:', error);
     });
 });
+
+document.getElementById('save-reclamation-button').addEventListener('click', function() {
+    let rows = document.querySelectorAll('#reclamations tbody tr');
+    let data = [];
+
+    rows.forEach(row => {
+        let rowData = {
+            id: row.getAttribute('data-id'),
+            failure_date: row.cells[1].innerText,
+            operating_time: row.cells[2].innerText,
+            failure_unit: row.cells[3].innerText,
+            recovery_method: row.cells[4].innerText
+        };
+        data.push(rowData);
+    });
+
+    fetch('{% url "save_reclamations" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Changes saved successfully!');
+        document.getElementById('save-reclamation-button').style.display = 'none';
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
 </script>
+
 {% endblock %}

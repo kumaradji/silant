@@ -1,3 +1,5 @@
+# inventory/filters.py
+
 import django_filters
 from .models import Machine, Maintenance, Reclamation
 
@@ -6,12 +8,12 @@ class MachineFilter(django_filters.FilterSet):
     model_technique = django_filters.CharFilter(field_name='model_technique', lookup_expr='icontains')
     model_engine = django_filters.CharFilter(field_name='model_engine', lookup_expr='icontains')
     model_transmission = django_filters.CharFilter(field_name='model_transmission', lookup_expr='icontains')
-    model_steering_axle = django_filters.CharFilter(field_name='model_steering_axle', lookup_expr='icontains')
     model_drive_axle = django_filters.CharFilter(field_name='model_drive_axle', lookup_expr='icontains')
+    model_steering_axle = django_filters.CharFilter(field_name='model_steering_axle', lookup_expr='icontains')
 
     class Meta:
         model = Machine
-        fields = ['model_technique', 'model_engine', 'model_transmission', 'model_steering_axle', 'model_drive_axle']
+        fields = ['model_technique', 'model_engine', 'model_transmission', 'model_drive_axle', 'model_steering_axle']
 
 
 class MaintenanceFilter(django_filters.FilterSet):

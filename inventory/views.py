@@ -72,10 +72,15 @@ def client_view(request):
     machines = Machine.objects.filter(customer=request.user)
     maintenances = Maintenance.objects.filter(machine__customer=request.user)
     reclamations = Reclamation.objects.filter(machine__customer=request.user)
+
+    machine_filter = MachineFilter(request.GET, queryset=machines)
+    maintenance_filter = MaintenanceFilter(request.GET, queryset=maintenances)
+    reclamation_filter = ReclamationFilter(request.GET, queryset=reclamations)
+
     return render(request, 'inventory/client_view.html', {
-        'machines': machines,
-        'maintenances': maintenances,
-        'reclamations': reclamations
+        'machine_filter': machine_filter,
+        'maintenance_filter': maintenance_filter,
+        'reclamation_filter': reclamation_filter
     })
 
 
@@ -86,15 +91,14 @@ def service_company_view(request):
     maintenances = Maintenance.objects.filter(machine__service_company=request.user)
     reclamations = Reclamation.objects.filter(machine__service_company=request.user)
 
-    # Debugging output
-    print(f"Machines: {machines}")
-    print(f"Maintenances: {maintenances}")
-    print(f"Reclamations: {reclamations}")
+    machine_filter = MachineFilter(request.GET, queryset=machines)
+    maintenance_filter = MaintenanceFilter(request.GET, queryset=maintenances)
+    reclamation_filter = ReclamationFilter(request.GET, queryset=reclamations)
 
     return render(request, 'inventory/service_company_view.html', {
-        'machines': machines,
-        'maintenances': maintenances,
-        'reclamations': reclamations
+        'machine_filter': machine_filter,
+        'maintenance_filter': maintenance_filter,
+        'reclamation_filter': reclamation_filter
     })
 
 
@@ -104,10 +108,15 @@ def manager_view(request):
     machines = Machine.objects.all()
     maintenances = Maintenance.objects.all()
     reclamations = Reclamation.objects.all()
+
+    machine_filter = MachineFilter(request.GET, queryset=machines)
+    maintenance_filter = MaintenanceFilter(request.GET, queryset=maintenances)
+    reclamation_filter = ReclamationFilter(request.GET, queryset=reclamations)
+
     return render(request, 'inventory/manager_view.html', {
-        'machines': machines,
-        'maintenances': maintenances,
-        'reclamations': reclamations
+        'machine_filter': machine_filter,
+        'maintenance_filter': maintenance_filter,
+        'reclamation_filter': reclamation_filter
     })
 
 

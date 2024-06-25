@@ -14,6 +14,10 @@
 
         <div id="machines" class="tab-content active">
             <h2>Машины</h2>
+            <form method="get">
+                {{ machine_filter.form.as_p }}
+                <button type="submit">Фильтр</button>
+            </form>
             <table id="machines">
                 <thead>
                 <tr class="table-header">
@@ -27,7 +31,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for machine in machines %}
+                {% for machine in machine_filter.qs %}
                 <tr data-id="{{ machine.id }}">
                     <td contenteditable="true" class="editable">{{ machine.model_technique }}</td>
                     <td contenteditable="true" class="editable">{{ machine.serial_number }}</td>
@@ -45,6 +49,10 @@
 
         <div id="maintenances" class="tab-content">
             <h2>Техническое обслуживание</h2>
+            <form method="get">
+                {{ maintenance_filter.form.as_p }}
+                <button type="submit">Фильтр</button>
+            </form>
             <table id="maintenances">
                 <thead>
                 <tr class="table-header">
@@ -56,7 +64,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for maintenance in maintenances %}
+                {% for maintenance in maintenance_filter.qs %}
                 <tr data-id="{{ maintenance.id }}">
                     <td>{{ maintenance.machine.serial_number }}</td>
                     <td contenteditable="true" class="editable">{{ maintenance.maintenance_type }}</td>
@@ -72,6 +80,10 @@
 
         <div id="reclamations" class="tab-content">
             <h2>Рекламации</h2>
+            <form method="get">
+                {{ reclamation_filter.form.as_p }}
+                <button type="submit">Фильтр</button>
+            </form>
             <table id="reclamations">
                 <thead>
                 <tr class="table-header">
@@ -84,7 +96,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for reclamation in reclamations %}
+                {% for reclamation in reclamation_filter.qs %}
                 <tr data-id="{{ reclamation.id }}">
                     <td>{{ reclamation.machine.serial_number }}</td>
                     <td contenteditable="true" class="editable">{{ reclamation.failure_date }}</td>
@@ -108,17 +120,32 @@ function showTab(tabId) {
         tabs[i].style.display = 'none';
     }
     document.getElementById(tabId).style.display = 'block';
+    localStorage.setItem('activeTab', tabId);
 }
 
 // Show the default tab
-showTab('machines');
+var activeTab = localStorage.getItem('activeTab') || 'machines';
+showTab(activeTab);
 
 function showSaveButton(tableId, buttonId) {
     var table = document.getElementById(tableId);
     var button = document.getElementById(buttonId);
+    var originalData = [];
+
+    table.querySelectorAll('tbody tr').forEach(row => {
+        var rowData = Array.from(row.cells).map(cell => cell.innerText);
+        originalData.push(rowData);
+    });
 
     table.addEventListener('input', function() {
-        button.style.display = 'block';
+        var isChanged = false;
+        table.querySelectorAll('tbody tr').forEach((row, rowIndex) => {
+            var rowData = Array.from(row.cells).map(cell => cell.innerText);
+            if (JSON.stringify(rowData) !== JSON.stringify(originalData[rowIndex])) {
+                isChanged = true;
+            }
+        });
+        button.style.display = isChanged ? 'block' : 'none';
     });
 }
 
@@ -227,4 +254,5 @@ document.getElementById('save-reclamation-button').addEventListener('click', fun
     });
 });
 </script>
+
 {% endblock %}
