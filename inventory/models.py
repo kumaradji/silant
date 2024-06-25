@@ -66,6 +66,12 @@ class Reclamation(models.Model):
     def __str__(self):
         return f'{self.machine} - {self.failure_unit}'
 
+    def save(self, *args, **kwargs):
+        # Calculate downtime before saving
+        if self.failure_date and self.recovery_date:
+            self.downtime = (self.recovery_date - self.failure_date).days
+        super().save(*args, **kwargs)
+
     class Meta:
         verbose_name = 'Рекламация'
         verbose_name_plural = 'Рекламации'
