@@ -13,6 +13,24 @@ function showTab(tabId) {
 var activeTab = localStorage.getItem('activeTab') || 'machines';
 showTab(activeTab);
 
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
 function showSaveButton(tableId, buttonId) {
     var table = document.getElementById(tableId);
     var button = document.getElementById(buttonId);
@@ -39,10 +57,10 @@ showSaveButton('machines', 'save-machines-button');
 showSaveButton('maintenances', 'save-maintenance-button');
 showSaveButton('reclamations', 'save-reclamation-button');
 
+
 function saveData(url, tableId, buttonId, fields) {
     let rows = document.querySelectorAll(`#${tableId} tbody tr`);
     let data = [];
-
     rows.forEach(row => {
         let rowData = {
             id: row.getAttribute('data-id')
@@ -52,25 +70,31 @@ function saveData(url, tableId, buttonId, fields) {
         });
         data.push(rowData);
     });
-
     fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            'X-CSRFToken': csrftoken
         },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
         alert('Изменения успешно сохранены!');
         document.getElementById(buttonId).style.display = 'none';
     })
     .catch((error) => {
         console.error('Error:', error);
+        alert('Произошла ошибка при сохранении изменений');
     });
 }
 
+// Обработчики событий для кнопок сохранения
 document.getElementById('save-machines-button').addEventListener('click', function() {
     saveData('/save_machines/', 'machines', 'save-machines-button', [
         'model_technique', 'serial_number', 'model_engine', 'model_transmission',

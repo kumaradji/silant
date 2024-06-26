@@ -30,14 +30,19 @@ def save_machines(request):
 @csrf_exempt
 def save_maintenances(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        for item in data:
-            maintenance = Maintenance.objects.get(id=item['id'])
-            maintenance.maintenance_type = item['maintenance_type']
-            maintenance.maintenance_date = item['maintenance_date']
-            maintenance.operating_time = item['operating_time']
-            maintenance.save()
-        return JsonResponse({'status': 'success'})
+        try:
+            data = json.loads(request.body)
+            for item in data:
+                maintenance = Maintenance.objects.get(id=item['id'])
+                maintenance.maintenance_type = item['maintenance_type']
+                maintenance.maintenance_date = item['maintenance_date']
+                maintenance.operating_time = item['operating_time']
+                maintenance.save()
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            print(f"Error: {str(e)}")  # Добавьте это для отладки
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 
 @csrf_exempt
