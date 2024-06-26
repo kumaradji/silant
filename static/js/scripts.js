@@ -44,7 +44,9 @@ function saveData(url, tableId, buttonId, fields) {
     let data = [];
 
     rows.forEach(row => {
-        let rowData = { id: row.getAttribute('data-id') };
+        let rowData = {
+            id: row.getAttribute('data-id')
+        };
         fields.forEach((field, index) => {
             rowData[field] = row.cells[index].innerText;
         });
@@ -71,41 +73,38 @@ function saveData(url, tableId, buttonId, fields) {
 
 document.getElementById('save-machines-button').addEventListener('click', function() {
     saveData('/save_machines/', 'machines', 'save-machines-button', [
-        'model_technique', 'serial_number', 'model_engine',
-        'model_transmission', 'model_drive_axle', 'model_steering_axle', 'shipment_date'
+        'model_technique', 'serial_number', 'model_engine', 'model_transmission',
+        'model_drive_axle', 'model_steering_axle', 'shipment_date'
     ]);
 });
 
 document.getElementById('save-maintenance-button').addEventListener('click', function() {
     saveData('/save_maintenances/', 'maintenances', 'save-maintenance-button', [
-        'maintenance_type', 'maintenance_date', 'operating_time'
+        'machine', 'maintenance_type', 'maintenance_date', 'operating_time'
     ]);
 });
 
 document.getElementById('save-reclamation-button').addEventListener('click', function() {
     saveData('/save_reclamations/', 'reclamations', 'save-reclamation-button', [
-        'failure_date', 'operating_time', 'failure_unit', 'recovery_method'
+        'machine', 'failure_date', 'operating_time', 'failure_unit', 'recovery_method'
     ]);
 });
 
-// Добавление обработчиков для перехода на детальную информацию
-document.querySelectorAll('#machines tbody tr').forEach(row => {
-    row.addEventListener('click', function() {
-        var machineId = this.getAttribute('data-id');
+// Добавление обработчика для перехода на детальную информацию только для машин
+document.getElementById('machines').addEventListener('click', function(event) {
+    if (event.target.tagName === 'TD') {
+        var machineId = event.target.parentElement.getAttribute('data-id');
         window.location.href = `/machine/${machineId}/`;
-    });
+    }
 });
 
-document.querySelectorAll('#maintenances tbody tr').forEach(row => {
-    row.addEventListener('click', function() {
-        var maintenanceId = this.getAttribute('data-id');
-        window.location.href = `/maintenance/${maintenanceId}/`;
+// Добавление возможности редактирования ячеек для технического обслуживания и рекламаций
+function makeEditable(tableId) {
+    var table = document.getElementById(tableId);
+    table.querySelectorAll('tbody td.editable').forEach(cell => {
+        cell.contentEditable = true;
     });
-});
+}
 
-document.querySelectorAll('#reclamations tbody tr').forEach(row => {
-    row.addEventListener('click', function() {
-        var reclamationId = this.getAttribute('data-id');
-        window.location.href = `/reclamation/${reclamationId}/`;
-    });
-});
+makeEditable('maintenances');
+makeEditable('reclamations');

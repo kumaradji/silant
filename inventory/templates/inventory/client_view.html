@@ -1,3 +1,4 @@
+<!-- client_view.html -->
 {% extends 'inventory/base.html' %}
 {% load static %}
 
@@ -9,7 +10,6 @@
         <div class="tabs">
             <button onclick="showTab('machines')" class="active">Мои машины</button>
             <button onclick="showTab('maintenances')">Техническое обслуживание</button>
-            <button onclick="showTab('reclamations')">Рекламации</button>
         </div>
 
         <div id="machines" class="tab-content active">
@@ -33,18 +33,17 @@
                 <tbody>
                 {% for machine in machine_filter.qs %}
                 <tr data-id="{{ machine.id }}">
-                    <td contenteditable="true" class="editable">{{ machine.model_technique }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.serial_number }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.model_engine }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.model_transmission }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.model_drive_axle }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.model_steering_axle }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.shipment_date }}</td>
+                    <td>{{ machine.model_technique }}</td>
+                    <td>{{ machine.serial_number }}</td>
+                    <td>{{ machine.model_engine }}</td>
+                    <td>{{ machine.model_transmission }}</td>
+                    <td>{{ machine.model_drive_axle }}</td>
+                    <td>{{ machine.model_steering_axle }}</td>
+                    <td>{{ machine.shipment_date }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
-            <button id="save-machines-button" style="display: none;">Сохранить изменения в машинах</button>
         </div>
 
         <div id="maintenances" class="tab-content">
@@ -77,42 +76,8 @@
             </table>
             <button id="save-maintenance-button" style="display:none;">Сохранить изменения в ТО</button>
         </div>
-
-        <div id="reclamations" class="tab-content">
-            <h2>Рекламации</h2>
-            <form method="get">
-                {{ reclamation_filter.form.as_p }}
-                <button type="submit">Фильтр</button>
-            </form>
-            <table>
-                <thead>
-                <tr class="table-header">
-                    <th><a href="?order_by=machine__serial_number">Машина</a></th>
-                    <th><a href="?order_by=failure_date">Дата отказа</a></th>
-                    <th><a href="?order_by=operating_time">Наработка, м/час</a></th>
-                    <th><a href="?order_by=failure_unit">Узел отказа</a></th>
-                    <th><a href="?order_by=recovery_method">Способ восстановления</a></th>
-                    <th><a href="?order_by=service_company__first_name">Сервисная компания</a></th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for reclamation in reclamation_filter.qs %}
-                <tr data-id="{{ reclamation.id }}">
-                    <td>{{ reclamation.machine.serial_number }}</td>
-                    <td contenteditable="true" class="editable">{{ reclamation.failure_date }}</td>
-                    <td contenteditable="true" class="editable">{{ reclamation.operating_time }}</td>
-                    <td contenteditable="true" class="editable">{{ reclamation.failure_unit }}</td>
-                    <td contenteditable="true" class="editable">{{ reclamation.recovery_method }}</td>
-                    <td>{{ reclamation.service_company.first_name }}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <button id="save-reclamation-button" style="display:none;">Сохранить изменения в рекламациях</button>
-        </div>
     </section>
 </main>
 
 <script src="{% static 'js/scripts.js' %}"></script>
-
 {% endblock %}
