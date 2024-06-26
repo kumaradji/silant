@@ -13,6 +13,7 @@ class MachineAdminForm(forms.ModelForm):
         super(MachineAdminForm, self).__init__(*args, **kwargs)
         self.fields['customer'].queryset = User.objects.all()
         self.fields['consignee'].queryset = User.objects.all()
+        self.fields['service_company'].queryset = User.objects.all()
 
 
 @admin.register(Machine)

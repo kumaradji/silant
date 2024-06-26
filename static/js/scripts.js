@@ -87,3 +87,25 @@ document.getElementById('save-reclamation-button').addEventListener('click', fun
         'failure_date', 'operating_time', 'failure_unit', 'recovery_method'
     ]);
 });
+
+// Добавление обработчиков для перехода на детальную информацию
+document.querySelectorAll('#machines tbody tr').forEach(row => {
+    row.addEventListener('click', function() {
+        var machineId = this.getAttribute('data-id');
+        window.location.href = `/machine/${machineId}/`;
+    });
+});
+
+document.querySelectorAll('#maintenances tbody tr').forEach(row => {
+    row.addEventListener('click', function() {
+        var maintenanceId = this.getAttribute('data-id');
+        window.location.href = `/maintenance/${maintenanceId}/`;
+    });
+});
+
+document.querySelectorAll('#reclamations tbody tr').forEach(row => {
+    row.addEventListener('click', function() {
+        var reclamationId = this.getAttribute('data-id');
+        window.location.href = `/reclamation/${reclamationId}/`;
+    });
+});

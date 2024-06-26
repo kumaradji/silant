@@ -23,6 +23,7 @@ class Machine(models.Model):
     configuration = models.TextField(verbose_name='Комплектация (доп. опции)')
     service_company = models.ForeignKey(User, related_name='service_machines', on_delete=models.CASCADE,
                                         verbose_name='Сервисная компания')
+    description = models.TextField(null=True, blank=True, verbose_name='Описание')
 
     def __str__(self):
         return self.serial_number

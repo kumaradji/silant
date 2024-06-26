@@ -18,7 +18,7 @@
                 {{ machine_filter.form.as_p }}
                 <button type="submit">Фильтр</button>
             </form>
-            <table>
+            <table id="machines">
                 <thead>
                 <tr class="table-header">
                     <th><a href="?order_by=model_technique">Модель техники</a></th>
@@ -33,13 +33,13 @@
                 <tbody>
                 {% for machine in machine_filter.qs %}
                 <tr data-id="{{ machine.id }}">
-                    <td contenteditable="true" class="editable">{{ machine.model_technique }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.serial_number }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.model_engine }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.model_transmission }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.model_drive_axle }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.model_steering_axle }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.shipment_date }}</td>
+                    <td>{{ machine.model_technique }}</td>
+                    <td>{{ machine.serial_number }}</td>
+                    <td>{{ machine.model_engine }}</td>
+                    <td>{{ machine.model_transmission }}</td>
+                    <td>{{ machine.model_drive_axle }}</td>
+                    <td>{{ machine.model_steering_axle }}</td>
+                    <td>{{ machine.shipment_date }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -53,7 +53,7 @@
                 {{ maintenance_filter.form.as_p }}
                 <button type="submit">Фильтр</button>
             </form>
-            <table>
+            <table id="maintenances">
                 <thead>
                 <tr class="table-header">
                     <th><a href="?order_by=machine__serial_number">Машина</a></th>
@@ -67,9 +67,9 @@
                 {% for maintenance in maintenance_filter.qs %}
                 <tr data-id="{{ maintenance.id }}">
                     <td>{{ maintenance.machine.serial_number }}</td>
-                    <td contenteditable="true" class="editable">{{ maintenance.maintenance_type }}</td>
-                    <td contenteditable="true" class="editable">{{ maintenance.maintenance_date }}</td>
-                    <td contenteditable="true" class="editable">{{ maintenance.operating_time }}</td>
+                    <td>{{ maintenance.maintenance_type }}</td>
+                    <td>{{ maintenance.maintenance_date }}</td>
+                    <td>{{ maintenance.operating_time }}</td>
                     <td>{{ maintenance.service_company.first_name }}</td>
                 </tr>
                 {% endfor %}
@@ -84,25 +84,25 @@
                 {{ reclamation_filter.form.as_p }}
                 <button type="submit">Фильтр</button>
             </form>
-            <table>
+            <table id="reclamations">
                 <thead>
                 <tr class="table-header">
                     <th><a href="?order_by=machine__serial_number">Машина</a></th>
                     <th><a href="?order_by=failure_date">Дата отказа</a></th>
                     <th><a href="?order_by=operating_time">Наработка, м/час</a></th>
                     <th><a href="?order_by=failure_unit">Узел отказа</a></th>
-                    <th><a href="?order_by=recovery_method">Способ восстановления</а>
-                    <th><a href="?order_by=service_company__first_name">Сервисная компания</а>
+                    <th><a href="?order_by=recovery_method">Способ восстановления</a></th>
+                    <th><a href="?order_by=service_company__first_name">Сервисная компания</a></th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for reclamation in reclamation_filter.qs %}
                 <tr data-id="{{ reclamation.id }}">
                     <td>{{ reclamation.machine.serial_number }}</td>
-                    <td contenteditable="true" class="editable">{{ reclamation.failure_date }}</td>
-                    <td contenteditable="true" class="editable">{{ reclamation.operating_time }}</td>
-                    <td contenteditable="true" class="editable">{{ reclamation.failure_unit }}</td>
-                    <td contenteditable="true" class="editable">{{ reclamation.recovery_method }}</td>
+                    <td>{{ reclamation.failure_date }}</td>
+                    <td>{{ reclamation.operating_time }}</td>
+                    <td>{{ reclamation.failure_unit }}</td>
+                    <td>{{ reclamation.recovery_method }}</td>
                     <td>{{ reclamation.service_company.first_name }}</td>
                 </tr>
                 {% endfor %}

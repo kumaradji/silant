@@ -1,18 +1,24 @@
+<!-- inventory/templates/inventory/machine_detail.html -->
+
 {% extends 'inventory/base.html' %}
+{% load static %}
+
+{% block title %}Детальная информация о машине{% endblock %}
 
 {% block content %}
-    <h2>Детали машины</h2>
-    <p><strong>Зав. № машины:</strong> {{ machine.serial_number }}</p>
-    <p><strong>Модель техники:</strong> {{ machine.model_technique }}</p>
-    <p><strong>Модель двигателя:</strong> {{ machine.model_engine }}</p>
-    <p><strong>Модель трансмиссии:</strong> {{ machine.model_transmission }}</p>
-    <p><strong>Модель ведущего моста:</strong> {{ machine.model_drive_axle }}</p>
-    <p><strong>Модель управляемого моста:</strong> {{ machine.model_steering_axle }}</p>
-    <p><strong>Договор поставки:</strong> {{ machine.delivery_contract }}</p>
-    <p><strong>Дата отгрузки с завода:</strong> {{ machine.shipment_date }}</p>
-    <p><strong>Покупатель:</strong> {{ machine.customer.first_name }}</p>
-    <p><strong>Грузополучатель:</strong> {{ machine.consignee }}</p>
-    <p><strong>Адрес поставки:</strong> {{ machine.delivery_address }}</p>
-    <p><strong>Комплектация:</strong> {{ machine.configuration }}</p>
-    <p><strong>Сервисная компания:</strong> {{ machine.service_company.first_name }}</p>
+<main>
+    <section class="main-container">
+        <h2>Детальная информация о машине</h2>
+        <div>
+            <h3>{{ machine.model_technique }}</h3>
+            <p><strong>Серийный номер:</strong> {{ machine.serial_number }}</p>
+            <p><strong>Модель двигателя:</strong> {{ machine.model_engine }}</p>
+            <p><strong>Модель трансмиссии:</strong> {{ machine.model_transmission }}</p>
+            <p><strong>Модель ведущего моста:</strong> {{ machine.model_drive_axle }}</p>
+            <p><strong>Модель управляемого моста:</strong> {{ machine.model_steering_axle }}</p>
+            <p><strong>Дата отгрузки:</strong> {{ machine.shipment_date }}</p>
+            <p><strong>Описание:</strong> {{ machine.description|linebreaks }}</p>
+        </div>
+    </section>
+</main>
 {% endblock %}
