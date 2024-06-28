@@ -25,14 +25,14 @@
                     <th><a href="?order_by=serial_number">Зав. № машины</a></th>
                     <th><a href="?order_by=model_engine">Модель двигателя</a></th>
                     <th><a href="?order_by=model_transmission">Модель трансмиссии</a></th>
-                    <th><a href="?order_by=model_drive_axle">Модель ведущего моста</а>
-                    <th><a href="?order_by=model_steering_axle">Модель управляемого моста</а>
-                    <th><a href="?order_by=shipment_date">Дата отгрузки с завода</а>
+                    <th><a href="?order_by=model_drive_axle">Модель ведущего моста</a></th>
+                    <th><a href="?order_by=model_steering_axle">Модель управляемого моста</a></th>
+                    <th><a href="?order_by=shipment_date">Дата отгрузки с завода</a></th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for machine in machine_filter.qs %}
-                <tr data-id="{{ machine.id }}">
+                <tr data-id="{{ machine.id }}" onclick="goToMachineDetail('{{ machine.id }}')">
                     <td>{{ machine.model_technique }}</td>
                     <td>{{ machine.serial_number }}</td>
                     <td>{{ machine.model_engine }}</td>
@@ -56,11 +56,11 @@
             <table id="maintenances">
                 <thead>
                 <tr class="table-header">
-                    <th><a href="?order_by=machine__serial_number">Машина</а></th>
-                    <th><a href="?order_by=maintenance_type">Вид ТО</а></th>
-                    <th><a href="?order_by=maintenance_date">Дата проведения ТО</а></th>
-                    <th><a href="?order_by=operating_time">Наработка, м/час</а></th>
-                    <th><a href="?order_by=service_company__first_name">Сервисная компания</а></th>
+                    <th><a href="?order_by=machine__serial_number">Машина</a></th>
+                    <th><a href="?order_by=maintenance_type">Вид ТО</a></th>
+                    <th><a href="?order_by=maintenance_date">Дата проведения ТО</a></th>
+                    <th><a href="?order_by=operating_time">Наработка, м/час</a></th>
+                    <th><a href="?order_by=service_company__first_name">Сервисная компания</a></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -87,12 +87,12 @@
             <table id="reclamations">
                 <thead>
                 <tr class="table-header">
-                    <th><a href="?order_by=machine__serial_number">Машина</а></th>
-                    <th><a href="?order_by=failure_date">Дата отказа</а></th>
-                    <th><a href="?order_by=operating_time">Наработка, м/час</а></th>
-                    <th><a href="?order_by=failure_unit">Узел отказа</а></th>
-                    <th><a href="?order_by=recovery_method">Способ восстановления</а></th>
-                    <th><a href="?order_by=service_company__first_name">Сервисная компания</а></th>
+                    <th><a href="?order_by=machine__serial_number">Машина</a></th>
+                    <th><a href="?order_by=failure_date">Дата отказа</a></th>
+                    <th><a href="?order_by=operating_time">Наработка, м/час</a></th>
+                    <th><a href="?order_by=failure_unit">Узел отказа</a></th>
+                    <th><a href="?order_by=recovery_method">Способ восстановления</a></th>
+                    <th><a href="?order_by=service_company__first_name">Сервисная компания</a></th>
                 </tr>
                 </thead>
                 <tbody>

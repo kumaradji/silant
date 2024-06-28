@@ -141,3 +141,15 @@ function makeEditable(tableId) {
 
 makeEditable('maintenances');
 makeEditable('reclamations');
+
+function goToMachineDetail(machineId) {
+    window.location.href = `/machine/${machineId}/`;
+}
+
+// Добавляем обработчик клика для строк таблицы машин
+document.getElementById('machines').addEventListener('click', function(event) {
+    if (event.target.tagName === 'TD') {
+        var machineId = event.target.parentElement.getAttribute('data-id');
+        goToMachineDetail(machineId);
+    }
+});
