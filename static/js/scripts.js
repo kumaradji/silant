@@ -1,5 +1,3 @@
-// static/js/scripts.js
-
 function showTab(tabId) {
     var tabs = document.getElementsByClassName('tab-content');
     for (var i = 0; i < tabs.length; i++) {
@@ -9,10 +7,8 @@ function showTab(tabId) {
     localStorage.setItem('activeTab', tabId);
 }
 
-// Show the default tab
 var activeTab = localStorage.getItem('activeTab') || 'machines';
 showTab(activeTab);
-
 
 function getCookie(name) {
     let cookieValue = null;
@@ -30,6 +26,85 @@ function getCookie(name) {
 }
 
 const csrftoken = getCookie('csrftoken');
+
+document.getElementById('save-maintenance-button').addEventListener('click', function() {
+    let rows = document.querySelectorAll('#maintenances tbody tr');
+    let data = [];
+
+    rows.forEach(row => {
+        let rowData = {
+            id: row.getAttribute('data-id'),
+            maintenance_type: row.cells[1].innerText.trim(),
+            maintenance_date: row.cells[2].innerText.trim(),
+            operating_time: row.cells[3].innerText.trim()
+        };
+        data.push(rowData);
+    });
+
+    console.log('Data to be sent:', JSON.stringify(data, null, 2));
+
+    fetch('/save_maintenances/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Изменения успешно сохранены!');
+            document.getElementById('save-maintenance-button').style.display = 'none';
+        } else {
+            alert(`Произошла ошибка при сохранении изменений: ${data.message}`);
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при сохранении изменений');
+    });
+});
+
+document.getElementById('save-reclamation-button').addEventListener('click', function() {
+    let rows = document.querySelectorAll('#reclamations tbody tr');
+    let data = [];
+
+    rows.forEach(row => {
+        let rowData = {
+            id: row.getAttribute('data-id'),
+            failure_date: row.cells[1].innerText.trim(),
+            operating_time: row.cells[2].innerText.trim(),
+            failure_unit: row.cells[3].innerText.trim(),
+            recovery_method: row.cells[4].innerText.trim()
+        };
+        data.push(rowData);
+    });
+
+    console.log('Data to be sent:', JSON.stringify(data, null, 2));
+
+    fetch('/save_reclamations/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Изменения успешно сохранены!');
+            document.getElementById('save-reclamation-button').style.display = 'none';
+        } else {
+            alert(`Произошла ошибка при сохранении изменений: ${data.message}`);
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при сохранении изменений');
+    });
+});
 
 function showSaveButton(tableId, buttonId) {
     var table = document.getElementById(tableId);
@@ -57,72 +132,6 @@ showSaveButton('machines', 'save-machines-button');
 showSaveButton('maintenances', 'save-maintenance-button');
 showSaveButton('reclamations', 'save-reclamation-button');
 
-
-function saveData(url, tableId, buttonId, fields) {
-    let rows = document.querySelectorAll(`#${tableId} tbody tr`);
-    let data = [];
-    rows.forEach(row => {
-        let rowData = {
-            id: row.getAttribute('data-id')
-        };
-        fields.forEach((field, index) => {
-            rowData[field] = row.cells[index].innerText;
-        });
-        data.push(rowData);
-    });
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert('Изменения успешно сохранены!');
-        document.getElementById(buttonId).style.display = 'none';
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        alert('Произошла ошибка при сохранении изменений');
-    });
-}
-
-// Обработчики событий для кнопок сохранения
-document.getElementById('save-machines-button').addEventListener('click', function() {
-    saveData('/save_machines/', 'machines', 'save-machines-button', [
-        'model_technique', 'serial_number', 'model_engine', 'model_transmission',
-        'model_drive_axle', 'model_steering_axle', 'shipment_date'
-    ]);
-});
-
-document.getElementById('save-maintenance-button').addEventListener('click', function() {
-    saveData('/save_maintenances/', 'maintenances', 'save-maintenance-button', [
-        'machine', 'maintenance_type', 'maintenance_date', 'operating_time'
-    ]);
-});
-
-document.getElementById('save-reclamation-button').addEventListener('click', function() {
-    saveData('/save_reclamations/', 'reclamations', 'save-reclamation-button', [
-        'machine', 'failure_date', 'operating_time', 'failure_unit', 'recovery_method'
-    ]);
-});
-
-// Добавление обработчика для перехода на детальную информацию только для машин
-document.getElementById('machines').addEventListener('click', function(event) {
-    if (event.target.tagName === 'TD') {
-        var machineId = event.target.parentElement.getAttribute('data-id');
-        window.location.href = `/machine/${machineId}/`;
-    }
-});
-
-// Добавление возможности редактирования ячеек для технического обслуживания и рекламаций
 function makeEditable(tableId) {
     var table = document.getElementById(tableId);
     table.querySelectorAll('tbody td.editable').forEach(cell => {

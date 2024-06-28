@@ -1,5 +1,6 @@
 # views.py
 import json
+import logging
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.forms import AuthenticationForm
@@ -8,6 +9,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Machine, Maintenance, Reclamation
 from .filters import MachineFilter, MaintenanceFilter, ReclamationFilter
+
+logger = logging.getLogger(__name__)
 
 
 @csrf_exempt
@@ -48,15 +51,33 @@ def save_maintenances(request):
 @csrf_exempt
 def save_reclamations(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        for item in data:
-            reclamation = Reclamation.objects.get(id=item['id'])
-            reclamation.failure_date = item['failure_date']
-            reclamation.operating_time = item['operating_time']
-            reclamation.failure_unit = item['failure_unit']
-            reclamation.recovery_method = item['recovery_method']
-            reclamation.save()
-        return JsonResponse({'status': 'success'})
+        try:
+            data = json.loads(request.body)
+            logger.info(f"Received data: {data}")
+
+            for item in data:
+                try:
+                    reclamation = Reclamation.objects.get(id=item['id'])
+                    reclamation.failure_date = datetime.strptime(item['failure_date'], '%Y-%m-%d').date()
+                    reclamation.operating_time = item['operating_time']
+                    reclamation.failure_unit = item['failure_unit']
+                    reclamation.recovery_method = item['recovery_method']
+                    reclamation.save()
+                except Reclamation.DoesNotExist:
+                    logger.error(f"Reclamation with id {item['id']} does not exist")
+                except ValueError as e:
+                    logger.error(f"Error processing item: {item}. Error: {str(e)}")
+                    return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+                except Exception as e:
+                    logger.error(f"Unexpected error processing item: {item}. Error: {str(e)}")
+                    return JsonResponse({'status': 'error', 'message': 'Unexpected error occurred'}, status=500)
+
+            return JsonResponse({'status': 'success'})
+        except json.JSONDecodeError:
+            logger.error("Invalid JSON data received")
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON data'}, status=400)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
 
 def is_client(user):
