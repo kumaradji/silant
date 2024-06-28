@@ -33,13 +33,13 @@
                 <tbody>
                 {% for machine in machine_filter.qs %}
                 <tr data-id="{{ machine.id }}">
-                    <td contenteditable="true" class="editable">{{ machine.model_technique }}</td>
+                    <td class="clickable">{{ machine.model_technique }}</td>
                     <td contenteditable="true" class="editable">{{ machine.serial_number }}</td>
                     <td contenteditable="true" class="editable">{{ machine.model_engine }}</td>
                     <td contenteditable="true" class="editable">{{ machine.model_transmission }}</td>
                     <td contenteditable="true" class="editable">{{ machine.model_drive_axle }}</td>
                     <td contenteditable="true" class="editable">{{ machine.model_steering_axle }}</td>
-                    <td contenteditable="true" class="editable">{{ machine.shipment_date }}</td>
+                    <td contenteditable="true" class="editable">{{ machine.shipment_date|date:"Y-m-d" }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -68,7 +68,7 @@
                 <tr data-id="{{ maintenance.id }}">
                     <td>{{ maintenance.machine.serial_number }}</td>
                     <td contenteditable="true" class="editable">{{ maintenance.maintenance_type }}</td>
-                    <td contenteditable="true" class="editable">{{ maintenance.maintenance_date }}</td>
+                    <td contenteditable="true" class="editable">{{ maintenance.maintenance_date|date:"Y-m-d" }}</td>
                     <td contenteditable="true" class="editable">{{ maintenance.operating_time }}</td>
                     <td>{{ maintenance.service_company.first_name }}</td>
                 </tr>
@@ -99,7 +99,7 @@
                 {% for reclamation in reclamation_filter.qs %}
                 <tr data-id="{{ reclamation.id }}">
                     <td>{{ reclamation.machine.serial_number }}</td>
-                    <td contenteditable="true" class="editable">{{ reclamation.failure_date }}</td>
+                    <td contenteditable="true" class="editable">{{ reclamation.failure_date|date:"Y-m-d" }}</td>
                     <td contenteditable="true" class="editable">{{ reclamation.operating_time }}</td>
                     <td contenteditable="true" class="editable">{{ reclamation.failure_unit }}</td>
                     <td contenteditable="true" class="editable">{{ reclamation.recovery_method }}</td>
@@ -113,6 +113,6 @@
     </section>
 </main>
 
-<script src="{% static 'js/scripts.js' %}"></script>
+<script src="{% static 'js/manager_scripts.js' %}"></script>
 
 {% endblock %}
