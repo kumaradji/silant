@@ -1,4 +1,4 @@
-# views.py
+from datetime import datetime
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -33,30 +33,42 @@ def save_maintenances(request):
         try:
             data = json.loads(request.body)
             for item in data:
+                print(f"Processing item: {item}")  # Логирование полученного элемента
                 maintenance = Maintenance.objects.get(id=item['id'])
                 maintenance.maintenance_type = item['maintenance_type']
-                maintenance.maintenance_date = item['maintenance_date']
+                try:
+                    maintenance_date = datetime.strptime(item['maintenance_date'], '%Y-%m-%d').date()
+                except ValueError as e:
+                    print(f"Error parsing date for item {item}: {e}")
+                    continue
+                maintenance.maintenance_date = maintenance_date
                 maintenance.operating_time = item['operating_time']
                 maintenance.save()
             return JsonResponse({'status': 'success'})
         except Exception as e:
-            print(f"Error: {str(e)}")  # Добавьте это для отладки
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+
+
 
 
 @csrf_exempt
 def save_reclamations(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        for item in data:
-            reclamation = Reclamation.objects.get(id=item['id'])
-            reclamation.failure_date = item['failure_date']
-            reclamation.operating_time = item['operating_time']
-            reclamation.failure_unit = item['failure_unit']
-            reclamation.recovery_method = item['recovery_method']
-            reclamation.save()
-        return JsonResponse({'status': 'success'})
+        try:
+            data = json.loads(request.body)
+            for item in data:
+                reclamation = Reclamation.objects.get(id=item['id'])
+                reclamation.failure_date = datetime.strptime(item['failure_date'], '%Y-%m-%d').date()
+                reclamation.operating_time = item['operating_time']
+                reclamation.failure_unit = item['failure_unit']
+                reclamation.recovery_method = item['recovery_method']
+                reclamation.save()
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 
 def is_client(user):

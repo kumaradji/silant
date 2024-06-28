@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.dateparse import parse_date
 
 
 class Machine(models.Model):
@@ -35,7 +36,7 @@ class Machine(models.Model):
 
 
 class Maintenance(models.Model):
-    machine = models.ForeignKey(Machine, on_delete=models.CASCADE, verbose_name='Зав. № машины')
+    machine = models.ForeignKey('Machine', on_delete=models.CASCADE, verbose_name='Зав. № машины')
     maintenance_type = models.CharField(max_length=128, verbose_name='Вид ТО')
     maintenance_date = models.DateField(verbose_name='Дата проведения ТО')
     operating_time = models.PositiveIntegerField(verbose_name='Наработка, м/час')
@@ -45,6 +46,21 @@ class Maintenance(models.Model):
 
     def __str__(self):
         return f'{self.machine} - {self.maintenance_type}'
+
+    def save(self, *args, **kwargs):
+        if isinstance(self.maintenance_date, str):
+            try:
+                self.maintenance_date = parse_date(self.maintenance_date)
+            except ValueError as e:
+                raise ValueError(f"Неверный формат даты проведения ТО: {self.maintenance_date}. {str(e)}")
+
+        if isinstance(self.order_date, str):
+            try:
+                self.order_date = parse_date(self.order_date)
+            except ValueError as e:
+                raise ValueError(f"Неверный формат даты заказ-наряда: {self.order_date}. {str(e)}")
+
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Обслуживание'

@@ -1,5 +1,3 @@
-// static/js/scripts.js
-
 function showTab(tabId) {
     var tabs = document.getElementsByClassName('tab-content');
     for (var i = 0; i < tabs.length; i++) {
@@ -13,23 +11,64 @@ function showTab(tabId) {
 var activeTab = localStorage.getItem('activeTab') || 'machines';
 showTab(activeTab);
 
+function formatDate(dateStr) {
+    console.log("Original date string:", dateStr);
+    const months = {
+        'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06',
+        'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'
+    };
 
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
+    let [month, day, year] = dateStr.split(' ');
+    month = months[month.replace('.', '')] || month;
+    day = day.replace(',', '').padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day}`;
+    console.log("Formatted date:", formattedDate);
+    return formattedDate;
 }
 
-const csrftoken = getCookie('csrftoken');
+document.getElementById('save-maintenance-button').addEventListener('click', function() {
+    let rows = document.querySelectorAll('#maintenances tbody tr');
+    let data = [];
+
+    rows.forEach(row => {
+        let dateStr = row.cells[2].innerText.trim();
+        let formattedDate = formatDate(dateStr);
+        console.log(`Original date: ${dateStr}, Formatted date: ${formattedDate}`);
+
+        let rowData = {
+            id: row.getAttribute('data-id'),
+            maintenance_type: row.cells[1].innerText.trim(),
+            maintenance_date: formattedDate,
+            operating_time: row.cells[3].innerText.trim()
+        };
+        data.push(rowData);
+    });
+
+    console.log('Data to be sent:', JSON.stringify(data, null, 2));
+
+    fetch('/save_maintenances/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Изменения успешно сохранены!');
+            document.getElementById('save-maintenance-button').style.display = 'none';
+        } else {
+            alert(`Произошла ошибка при сохранении изменений: ${data.message}`);
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при сохранении изменений');
+    });
+});
 
 function showSaveButton(tableId, buttonId) {
     var table = document.getElementById(tableId);
@@ -56,7 +95,6 @@ function showSaveButton(tableId, buttonId) {
 showSaveButton('machines', 'save-machines-button');
 showSaveButton('maintenances', 'save-maintenance-button');
 showSaveButton('reclamations', 'save-reclamation-button');
-
 
 function saveData(url, tableId, buttonId, fields) {
     let rows = document.querySelectorAll(`#${tableId} tbody tr`);
@@ -99,12 +137,6 @@ document.getElementById('save-machines-button').addEventListener('click', functi
     saveData('/save_machines/', 'machines', 'save-machines-button', [
         'model_technique', 'serial_number', 'model_engine', 'model_transmission',
         'model_drive_axle', 'model_steering_axle', 'shipment_date'
-    ]);
-});
-
-document.getElementById('save-maintenance-button').addEventListener('click', function() {
-    saveData('/save_maintenances/', 'maintenances', 'save-maintenance-button', [
-        'machine', 'maintenance_type', 'maintenance_date', 'operating_time'
     ]);
 });
 
