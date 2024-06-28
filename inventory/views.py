@@ -1,6 +1,5 @@
 # views.py
 import json
-import logging
 from datetime import datetime
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -11,24 +10,31 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Machine, Maintenance, Reclamation
 from .filters import MachineFilter, MaintenanceFilter, ReclamationFilter
 
-logger = logging.getLogger(__name__)
-
 
 @csrf_exempt
 def save_machines(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        for item in data:
-            machine = Machine.objects.get(id=item['id'])
-            machine.model_technique = item['model_technique']
-            machine.serial_number = item['serial_number']
-            machine.model_engine = item['model_engine']
-            machine.model_transmission = item['model_transmission']
-            machine.model_drive_axle = item['model_drive_axle']
-            machine.model_steering_axle = item['model_steering_axle']
-            machine.shipment_date = item['shipment_date']
-            machine.save()
-        return JsonResponse({'status': 'success'})
+        try:
+            data = json.loads(request.body)
+            for item in data:
+                machine = Machine.objects.get(id=item['id'])
+                machine.model_technique = item['model_technique']
+                machine.serial_number = item['serial_number']
+                machine.model_engine = item['model_engine']
+                machine.model_transmission = item['model_transmission']
+                machine.model_drive_axle = item['model_drive_axle']
+                machine.model_steering_axle = item['model_steering_axle']
+                machine.shipment_date = datetime.strptime(item['shipment_date'], '%Y-%m-%d').date()
+                machine.save()
+            return JsonResponse({'status': 'success'})
+        except Machine.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Machine does not exist'}, status=400)
+        except ValueError as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': 'Unexpected error occurred'}, status=500)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
 
 @csrf_exempt
@@ -39,14 +45,18 @@ def save_maintenances(request):
             for item in data:
                 maintenance = Maintenance.objects.get(id=item['id'])
                 maintenance.maintenance_type = item['maintenance_type']
-                maintenance.maintenance_date = item['maintenance_date']
+                maintenance.maintenance_date = datetime.strptime(item['maintenance_date'], '%Y-%m-%d').date()
                 maintenance.operating_time = item['operating_time']
                 maintenance.save()
             return JsonResponse({'status': 'success'})
+        except Maintenance.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Maintenance record does not exist'}, status=400)
+        except ValueError as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
         except Exception as e:
-            print(f"Error: {str(e)}")  # Добавьте это для отладки
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+            return JsonResponse({'status': 'error', 'message': 'Unexpected error occurred'}, status=500)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
 
 @csrf_exempt
@@ -54,29 +64,20 @@ def save_reclamations(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            logger.info(f"Received data: {data}")
-
             for item in data:
-                try:
-                    reclamation = Reclamation.objects.get(id=item['id'])
-                    reclamation.failure_date = datetime.strptime(item['failure_date'], '%Y-%m-%d').date()
-                    reclamation.operating_time = item['operating_time']
-                    reclamation.failure_unit = item['failure_unit']
-                    reclamation.recovery_method = item['recovery_method']
-                    reclamation.save()
-                except Reclamation.DoesNotExist:
-                    logger.error(f"Reclamation with id {item['id']} does not exist")
-                except ValueError as e:
-                    logger.error(f"Error processing item: {item}. Error: {str(e)}")
-                    return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-                except Exception as e:
-                    logger.error(f"Unexpected error processing item: {item}. Error: {str(e)}")
-                    return JsonResponse({'status': 'error', 'message': 'Unexpected error occurred'}, status=500)
-
+                reclamation = Reclamation.objects.get(id=item['id'])
+                reclamation.failure_date = datetime.strptime(item['failure_date'], '%Y-%m-%d').date()
+                reclamation.operating_time = item['operating_time']
+                reclamation.failure_unit = item['failure_unit']
+                reclamation.recovery_method = item['recovery_method']
+                reclamation.save()
             return JsonResponse({'status': 'success'})
-        except json.JSONDecodeError:
-            logger.error("Invalid JSON data received")
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON data'}, status=400)
+        except Reclamation.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Reclamation does not exist'}, status=400)
+        except ValueError as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': 'Unexpected error occurred'}, status=500)
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
