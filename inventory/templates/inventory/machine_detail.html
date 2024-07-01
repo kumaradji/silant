@@ -1,5 +1,3 @@
-<!-- inventory/templates/inventory/machine_detail.html -->
-
 {% extends 'inventory/base.html' %}
 {% load static %}
 
@@ -9,15 +7,21 @@
 <main>
     <section class="main-container">
         <h2>Детальная информация о машине</h2>
-        <div>
-            <h3>{{ machine.model_technique }}</h3>
-            <p><strong>Серийный номер:</strong> {{ machine.serial_number }}</p>
-            <p><strong>Модель двигателя:</strong> {{ machine.model_engine }}</p>
-            <p><strong>Модель трансмиссии:</strong> {{ machine.model_transmission }}</p>
-            <p><strong>Модель ведущего моста:</strong> {{ machine.model_drive_axle }}</p>
-            <p><strong>Модель управляемого моста:</strong> {{ machine.model_steering_axle }}</p>
-            <p><strong>Дата отгрузки:</strong> {{ machine.shipment_date }}</p>
-            <p><strong>Описание:</strong> {{ machine.description|linebreaks }}</p>
+        <div class="detail-container">
+            <div class="left-column">
+                <h3>Технические характеристики</h3>
+                <h4>{{ machine.model_technique }}</h4>
+                <p><strong>Серийный номер:</strong> {{ machine.serial_number }}</p>
+                <p><strong>Модель двигателя:</strong> {{ machine.model_engine }}</p>
+                <p><strong>Модель трансмиссии:</strong> {{ machine.model_transmission }}</p>
+                <p><strong>Модель ведущего моста:</strong> {{ machine.model_drive_axle }}</p>
+                <p><strong>Модель управляемого моста:</strong> {{ machine.model_steering_axle }}</p>
+                <p><strong>Дата отгрузки:</strong> {{ machine.shipment_date }}</p>
+            </div>
+            <div class="right-column">
+                <h3>Описание</h3>
+                {{ machine.description|linebreaks }}
+            </div>
         </div>
     </section>
 </main>

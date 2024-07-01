@@ -97,9 +97,11 @@ def is_manager(user):
 @login_required
 @user_passes_test(is_client)
 def client_view(request):
-    machines = Machine.objects.filter(customer=request.user)
-    maintenances = Maintenance.objects.filter(machine__customer=request.user)
-    reclamations = Reclamation.objects.filter(machine__customer=request.user)
+    machines = Machine.objects.filter(customer=request.user) | Machine.objects.filter(consignee=request.user)
+    maintenances = Maintenance.objects.filter(machine__customer=request.user) | Maintenance.objects.filter(
+        machine__consignee=request.user)
+    reclamations = Reclamation.objects.filter(machine__customer=request.user) | Reclamation.objects.filter(
+        machine__consignee=request.user)
 
     machine_filter = MachineFilter(request.GET, queryset=machines)
     maintenance_filter = MaintenanceFilter(request.GET, queryset=maintenances)
@@ -169,18 +171,6 @@ def login_view(request):
 def machine_detail_view(request, machine_id):
     machine = get_object_or_404(Machine, id=machine_id)
     return render(request, 'inventory/machine_detail.html', {'machine': machine})
-
-
-@login_required
-def maintenance_detail_view(request, maintenance_id):
-    maintenance = get_object_or_404(Maintenance, id=maintenance_id)
-    return render(request, 'inventory/maintenance_detail.html', {'maintenance': maintenance})
-
-
-@login_required
-def reclamation_detail_view(request, reclamation_id):
-    reclamation = get_object_or_404(Reclamation, id=reclamation_id)
-    return render(request, 'inventory/reclamation_detail.html', {'reclamation': reclamation})
 
 
 @login_required
