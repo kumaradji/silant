@@ -5,32 +5,35 @@
 
 {% block content %}
 <main>
+    <!-- Основной контейнер для отображения контента страницы -->
     <section class="main-container">
         <h1>Техническое обслуживание</h1>
+        <!-- Таблица для отображения данных о техническом обслуживании -->
         <table>
             <thead>
-                <tr>
-                    <th>Машина</th>
-                    <th>Вид ТО</th>
-                    <th>Дата проведения ТО</th>
-                    <th>Наработка</th>
-                    <th>Номер заказа</th>
-                    <th>Дата заказа</th>
-                    <th>Сервисная компания</th>
-                </tr>
+            <tr>
+                <th>Машина</th>
+                <th>Вид ТО</th>
+                <th>Дата проведения ТО</th>
+                <th>Наработка</th>
+                <th>Номер заказа</th>
+                <th>Дата заказа</th>
+                <th>Сервисная компания</th>
+            </tr>
             </thead>
             <tbody>
-                {% for maintenance in maintenances %}
-                <tr onclick="location.href='{% url 'maintenance_detail' maintenance.id %}'">
-                    <td>{{ maintenance.machine.serial_number }}</td>
-                    <td>{{ maintenance.maintenance_type }}</td>
-                    <td>{{ maintenance.maintenance_date }}</td>
-                    <td>{{ maintenance.operating_time }}</td>
-                    <td>{{ maintenance.order_number }}</td>
-                    <td>{{ maintenance.order_date }}</td>
-                    <td>{{ maintenance.service_company.first_name }}</td>
-                </tr>
-                {% endfor %}
+            {% for maintenance in maintenances %}
+            <!-- Каждая строка таблицы кликабельна и ведет на детальную страницу ТО -->
+            <tr onclick="location.href='{% url 'maintenance_detail' maintenance.id %}'">
+                <td>{{ maintenance.machine.serial_number }}</td>
+                <td>{{ maintenance.maintenance_type }}</td>
+                <td>{{ maintenance.maintenance_date }}</td>
+                <td>{{ maintenance.operating_time }}</td>
+                <td>{{ maintenance.order_number }}</td>
+                <td>{{ maintenance.order_date }}</td>
+                <td>{{ maintenance.service_company.first_name }}</td>
+            </tr>
+            {% endfor %}
             </tbody>
         </table>
     </section>

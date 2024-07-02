@@ -7,11 +7,13 @@
 <main>
     <section class="main-container">
         <div class="tabs">
+            <!-- Кнопки для переключения между вкладками -->
             <button onclick="showTab('machines')" class="active">Машины</button>
             <button onclick="showTab('maintenances')">Техническое обслуживание</button>
             <button onclick="showTab('reclamations')">Рекламации</button>
         </div>
 
+        <!-- Вкладка с машинами -->
         <div id="machines" class="tab-content active">
             <h2>Машины</h2>
             <form method="get">
@@ -31,6 +33,7 @@
                 </tr>
                 </thead>
                 <tbody>
+                <!-- Перебор и отображение списка машин -->
                 {% for machine in machine_filter.qs %}
                 <tr data-id="{{ machine.id }}" onclick="goToMachineDetail('{{ machine.id }}')">
                     <td>{{ machine.model_technique }}</td>
@@ -39,13 +42,14 @@
                     <td>{{ machine.model_transmission }}</td>
                     <td>{{ machine.model_drive_axle }}</td>
                     <td>{{ machine.model_steering_axle }}</td>
-                    <td>{{ machine.shipment_date }}</td>
+                    <td>{{ machine.shipment_date|date:"Y-m-d" }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
 
+        <!-- Вкладка с техническим обслуживанием -->
         <div id="maintenances" class="tab-content">
             <h2>Техническое обслуживание</h2>
             <form method="get">
@@ -63,6 +67,7 @@
                 </tr>
                 </thead>
                 <tbody>
+                <!-- Перебор и отображение списка ТО -->
                 {% for maintenance in maintenance_filter.qs %}
                 <tr data-id="{{ maintenance.id }}">
                     <td>{{ maintenance.machine.serial_number }}</td>
@@ -77,6 +82,7 @@
             <button id="save-maintenance-button" style="display: none;">Сохранить изменения в ТО</button>
         </div>
 
+        <!-- Вкладка с рекламациями -->
         <div id="reclamations" class="tab-content">
             <h2>Рекламации</h2>
             <form method="get">
@@ -95,6 +101,7 @@
                 </tr>
                 </thead>
                 <tbody>
+                <!-- Перебор и отображение списка рекламаций -->
                 {% for reclamation in reclamation_filter.qs %}
                 <tr data-id="{{ reclamation.id }}">
                     <td>{{ reclamation.machine.serial_number }}</td>

@@ -6,14 +6,17 @@
 {% block content %}
 <main>
     <section class="main-container">
+        <!-- Вкладки для переключения между разделами -->
         <div class="tabs">
             <button onclick="showTab('machines')" class="active">Машины</button>
             <button onclick="showTab('maintenances')">Техническое обслуживание</button>
             <button onclick="showTab('reclamations')">Рекламации</button>
         </div>
 
+        <!-- Таблица с машинами -->
         <div id="machines" class="tab-content active">
             <h2>Машины</h2>
+            <!-- Форма фильтрации данных -->
             <form method="get">
                 {{ machine_filter.form.as_p }}
                 <button type="submit">Фильтр</button>
@@ -31,6 +34,7 @@
                 </tr>
                 </thead>
                 <tbody>
+                <!-- Перебор и отображение списка машин -->
                 {% for machine in machine_filter.qs %}
                 <tr data-id="{{ machine.id }}">
                     <td class="clickable">{{ machine.model_technique }}</td>
@@ -47,8 +51,10 @@
             <button id="save-machines-button" style="display: none;">Сохранить изменения в машинах</button>
         </div>
 
+        <!-- Таблица с техническим обслуживанием -->
         <div id="maintenances" class="tab-content">
             <h2>Техническое обслуживание</h2>
+            <!-- Форма фильтрации данных -->
             <form method="get">
                 {{ maintenance_filter.form.as_p }}
                 <button type="submit">Фильтр</button>
@@ -64,6 +70,7 @@
                 </tr>
                 </thead>
                 <tbody>
+                <!-- Перебор и отображение списка технического обслуживания -->
                 {% for maintenance in maintenance_filter.qs %}
                 <tr data-id="{{ maintenance.id }}">
                     <td>{{ maintenance.machine.serial_number }}</td>
@@ -78,8 +85,10 @@
             <button id="save-maintenance-button" style="display: none;">Сохранить изменения в ТО</button>
         </div>
 
+        <!-- Таблица с рекламациями -->
         <div id="reclamations" class="tab-content">
             <h2>Рекламации</h2>
+            <!-- Форма фильтрации данных -->
             <form method="get">
                 {{ reclamation_filter.form.as_p }}
                 <button type="submit">Фильтр</button>
@@ -88,14 +97,15 @@
                 <thead>
                 <tr class="table-header">
                     <th><a href="?order_by=machine__serial_number">Машина</a></th>
-                    <th><a href="?order_by=failure_date">Дата отказа</a></th>
-                    <th><a href="?order_by=operating_time">Наработка, м/час</a></th>
-                    <th><a href="?order_by=failure_unit">Узел отказа</a></th>
-                    <th><a href="?order_by=recovery_method">Способ восстановления</a></th>
-                    <th><a href="?order_by=service_company__first_name">Сервисная компания</a></th>
+                    <th><a href="?order_by=failure_date">Дата отказа</а></th>
+                    <th><a href="?order_by=operating_time">Наработка, м/час</а></th>
+                    <th><a href="?order_by=failure_unit">Узел отказа</а></th>
+                    <th><a href="?order_by=recovery_method">Способ восстановления</а></th>
+                    <th><a href="?order_by=service_company__first_name">Сервисная компания</а></th>
                 </tr>
                 </thead>
                 <tbody>
+                <!-- Перебор и отображение списка рекламаций -->
                 {% for reclamation in reclamation_filter.qs %}
                 <tr data-id="{{ reclamation.id }}">
                     <td>{{ reclamation.machine.serial_number }}</td>
@@ -113,6 +123,7 @@
     </section>
 </main>
 
+<!-- Подключение скрипта для страницы менеджера -->
 <script src="{% static 'js/manager_scripts.js' %}"></script>
 
 {% endblock %}

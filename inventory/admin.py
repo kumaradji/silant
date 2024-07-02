@@ -1,3 +1,7 @@
+# silant/admin.py
+# Этот файл определяет формы и админские представления для моделей Machine, Maintenance и Reclamation.
+# Эти представления используются в Django Admin для управления данными этих моделей.
+
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import User
@@ -5,6 +9,12 @@ from .models import Machine, Maintenance, Reclamation
 
 
 class MachineAdminForm(forms.ModelForm):
+    """
+    Форма для модели Machine в админке. Определяет все поля модели и
+    настраивает queryset для полей customer, consignee и service_company,
+    чтобы они включали всех пользователей.
+    """
+
     class Meta:
         model = Machine
         fields = '__all__'
@@ -18,6 +28,10 @@ class MachineAdminForm(forms.ModelForm):
 
 @admin.register(Machine)
 class MachineAdmin(admin.ModelAdmin):
+    """
+    Админское представление для модели Machine.
+    Определяет отображаемые поля в списке, поля для поиска и фильтры.
+    """
     form = MachineAdminForm
     list_display = ('serial_number', 'model_technique', 'model_engine', 'customer', 'consignee', 'service_company')
     search_fields = ('serial_number', 'model_technique', 'model_engine')
@@ -26,6 +40,10 @@ class MachineAdmin(admin.ModelAdmin):
 
 @admin.register(Maintenance)
 class MaintenanceAdmin(admin.ModelAdmin):
+    """
+    Админское представление для модели Maintenance.
+    Определяет отображаемые поля в списке, поля для поиска и фильтры.
+    """
     list_display = ('machine', 'maintenance_type', 'maintenance_date', 'service_company')
     search_fields = ('machine__serial_number', 'maintenance_type')
     list_filter = ('maintenance_date', 'service_company')
@@ -33,6 +51,10 @@ class MaintenanceAdmin(admin.ModelAdmin):
 
 @admin.register(Reclamation)
 class ReclamationAdmin(admin.ModelAdmin):
+    """
+    Админское представление для модели Reclamation.
+    Определяет отображаемые поля в списке, поля для поиска и фильтры.
+    """
     list_display = ('machine', 'failure_unit', 'failure_date', 'service_company')
     search_fields = ('machine__serial_number', 'failure_unit')
     list_filter = ('failure_date', 'service_company')

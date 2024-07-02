@@ -6,71 +6,78 @@
 {% block content %}
 <main class="main-container">
     <section class="form-container">
+        <!-- Форма для поиска по заводскому номеру -->
         <form method="get" action="{% url 'welcome' %}">
             <label for="serial_number">Заводской номер:</label>
             <input type="text" id="serial_number" name="serial_number" required>
             <button type="submit">Поиск</button>
         </form>
+        <!-- Если был выполнен поиск -->
         {% if search_performed %}
-            {% if machines %}
-                <h2>Результат поиска</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Модель техники</th>
-                            <th>Зав. № машины</th>
-                            <th>Модель двигателя</th>
-                            <th>Модель трансмиссии</th>
-                            <th>Модель ведущего моста</th>
-                            <th>Модель управляемого моста</th>
-                            <th>Дата отгрузки с завода</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for machine in machines %}
-                            <tr>
-                                <td>{{ machine.model_technique }}</td>
-                                <td>{{ machine.serial_number }}</td>
-                                <td>{{ machine.model_engine }}</td>
-                                <td>{{ machine.model_transmission }}</td>
-                                <td>{{ machine.model_drive_axle }}</td>
-                                <td>{{ machine.model_steering_axle }}</td>
-                                <td>{{ machine.shipment_date|date:"Y-m-d" }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>Данных о машине с таким заводским номером нет в системе.</p>
-            {% endif %}
+        <!-- Если найдены машины по результатам поиска -->
+        {% if machines %}
+        <h2>Результат поиска</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Модель техники</th>
+                <th>Зав. № машины</th>
+                <th>Модель двигателя</th>
+                <th>Модель трансмиссии</th>
+                <th>Модель ведущего моста</th>
+                <th>Модель управляемого моста</th>
+                <th>Дата отгрузки с завода</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Перебор и отображение найденных машин -->
+            {% for machine in machines %}
+            <tr>
+                <td>{{ machine.model_technique }}</td>
+                <td>{{ machine.serial_number }}</td>
+                <td>{{ machine.model_engine }}</td>
+                <td>{{ machine.model_transmission }}</td>
+                <td>{{ machine.model_drive_axle }}</td>
+                <td>{{ machine.model_steering_axle }}</td>
+                <td>{{ machine.shipment_date|date:"Y-m-d" }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <!-- Если машины не найдены -->
         {% else %}
-            <h2>Список всех машин</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Модель техники</th>
-                        <th>Зав. № машины</th>
-                        <th>Модель двигателя</th>
-                        <th>Модель трансмиссии</th>
-                        <th>Модель ведущего моста</th>
-                        <th>Модель управляемого моста</th>
-                        <th>Дата отгрузки с завода</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for machine in all_machines %}
-                        <tr>
-                            <td>{{ machine.model_technique }}</td>
-                            <td>{{ machine.serial_number }}</td>
-                            <td>{{ machine.model_engine }}</td>
-                            <td>{{ machine.model_transmission }}</td>
-                            <td>{{ machine.model_drive_axle }}</td>
-                            <td>{{ machine.model_steering_axle }}</td>
-                            <td>{{ machine.shipment_date|date:"Y-m-d" }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <p>Данных о машине с таким заводским номером нет в системе.</p>
+        {% endif %}
+        <!-- Если поиск не был выполнен, отображаем список всех машин -->
+        {% else %}
+        <h2>Список всех машин</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Модель техники</th>
+                <th>Зав. № машины</th>
+                <th>Модель двигателя</th>
+                <th>Модель трансмиссии</th>
+                <th>Модель ведущего моста</th>
+                <th>Модель управляемого моста</th>
+                <th>Дата отгрузки с завода</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Перебор и отображение всех машин -->
+            {% for machine in all_machines %}
+            <tr>
+                <td>{{ machine.model_technique }}</td>
+                <td>{{ machine.serial_number }}</td>
+                <td>{{ machine.model_engine }}</td>
+                <td>{{ machine.model_transmission }}</td>
+                <td>{{ machine.model_drive_axle }}</td>
+                <td>{{ machine.model_steering_axle }}</td>
+                <td>{{ machine.shipment_date|date:"Y-m-d" }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% endif %}
     </section>
 </main>

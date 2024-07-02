@@ -1,4 +1,6 @@
-# views.py
+# silant/views.py
+# Этот файл содержит определения представлений для обработки различных запросов и управления данными в приложении.
+
 import json
 from datetime import datetime
 from django.http import JsonResponse
@@ -13,6 +15,9 @@ from .filters import MachineFilter, MaintenanceFilter, ReclamationFilter
 
 @csrf_exempt
 def save_machines(request):
+    """
+    Представление для сохранения данных о машинах.
+    """
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -39,6 +44,9 @@ def save_machines(request):
 
 @csrf_exempt
 def save_maintenances(request):
+    """
+    Представление для сохранения данных о техническом обслуживании.
+    """
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -61,6 +69,9 @@ def save_maintenances(request):
 
 @csrf_exempt
 def save_reclamations(request):
+    """
+    Представление для сохранения данных о рекламациях.
+    """
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -83,20 +94,32 @@ def save_reclamations(request):
 
 
 def is_client(user):
+    """
+    Проверяет, является ли пользователь клиентом.
+    """
     return user.groups.filter(name='Клиент').exists()
 
 
 def is_service_company(user):
+    """
+    Проверяет, является ли пользователь представителем сервисной компании.
+    """
     return user.groups.filter(name='Сервисная организация').exists()
 
 
 def is_manager(user):
+    """
+    Проверяет, является ли пользователь менеджером.
+    """
     return user.groups.filter(name='Менеджер').exists()
 
 
 @login_required
 @user_passes_test(is_client)
 def client_view(request):
+    """
+    Представление для отображения данных для клиентов.
+    """
     machines = Machine.objects.filter(customer=request.user) | Machine.objects.filter(consignee=request.user)
     maintenances = Maintenance.objects.filter(machine__customer=request.user) | Maintenance.objects.filter(
         machine__consignee=request.user)
@@ -117,6 +140,9 @@ def client_view(request):
 @login_required
 @user_passes_test(is_service_company)
 def service_company_view(request):
+    """
+    Представление для отображения данных для сервисных компаний.
+    """
     machines = Machine.objects.filter(service_company=request.user)
     maintenances = Maintenance.objects.filter(machine__service_company=request.user)
     reclamations = Reclamation.objects.filter(machine__service_company=request.user)
@@ -135,6 +161,9 @@ def service_company_view(request):
 @login_required
 @user_passes_test(is_manager)
 def manager_view(request):
+    """
+    Представление для отображения данных для менеджеров.
+    """
     machines = Machine.objects.all()
     maintenances = Maintenance.objects.all()
     reclamations = Reclamation.objects.all()
@@ -151,6 +180,9 @@ def manager_view(request):
 
 
 def login_view(request):
+    """
+    Представление для входа в систему.
+    """
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -169,12 +201,18 @@ def login_view(request):
 
 @login_required
 def machine_detail_view(request, machine_id):
+    """
+    Представление для отображения детальной информации о машине.
+    """
     machine = get_object_or_404(Machine, id=machine_id)
     return render(request, 'inventory/machine_detail.html', {'machine': machine})
 
 
 @login_required
 def main_view(request):
+    """
+    Представление для отображения главной страницы в зависимости от роли пользователя.
+    """
     user = request.user
 
     machine_filter = MachineFilter(request.GET, queryset=Machine.objects.all())
@@ -198,11 +236,14 @@ def main_view(request):
 
 
 def welcome_view(request):
+    """
+    Представление для отображения главной страницы.
+    """
     serial_number = request.GET.get('serial_number')
     machines = []
     search_performed = False
 
-    if serial_number:
+    if (serial_number):
         machines = Machine.objects.filter(serial_number=serial_number)
         search_performed = True
 

@@ -69,7 +69,9 @@ celerybeat-schedule
 
 # dotenv
 .env
-.venv
+
+# Virtual Environments
+.venv/
 env/
 venv/
 ENV/
@@ -81,15 +83,6 @@ venv.bak/
 
 # Rope project settings
 .ropeproject
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
 
 # PyCharm
 .idea/
@@ -107,6 +100,7 @@ venv.bak/
 Thumbs.db
 ehthumbs.db
 
+# Exclusions
 !/silant_bd.xlsx
 !/db.sqlite3
-/inventory/management/
+!/Makefile
