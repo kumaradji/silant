@@ -30,23 +30,23 @@
             <table id="machines-table">
                 <thead>
                 <tr class="table-header">
-                    <th>Зав. № машины</th>
-                    <th>Модель техники</th>
-                    <th>Модель двигателя</th>
-                    <th>Зав. № двигателя</th>
-                    <th>Модель трансмиссии</th>
-                    <th>Зав. № трансмиссии</th>
-                    <th>Модель ведущего моста</th>
-                    <th>Зав. № ведущего моста</th>
-                    <th>Модель управляемого моста</th>
-                    <th>Зав. № управляемого моста</th>
-                    <th>Договор поставки №, дата</th>
-                    <th>Дата отгрузки с завода</th>
-                    <th>Грузополучатель (конечный потребитель)</th>
-                    <th>Адрес поставки (эксплуатации)</th>
-                    <th>Комплектация (доп. опции)</th>
-                    <th>Клиент</th>
-                    <th>Сервисная компания</th>
+                    <th><a href="?order_by=serial_number">Зав. № машины</a></th>
+                    <th><a href="?order_by=model_technique">Модель техники</a></th>
+                    <th><a href="?order_by=model_engine">Модель двигателя</a></th>
+                    <th><a href="?order_by=engine_serial_number">Зав. № двигателя</a></th>
+                    <th><a href="?order_by=model_transmission">Модель трансмиссии</a></th>
+                    <th><a href="?order_by=transmission_serial_number">Зав. № трансмиссии</a></th>
+                    <th><a href="?order_by=model_drive_axle">Модель ведущего моста</a></th>
+                    <th><a href="?order_by=drive_axle_serial_number">Зав. № ведущего моста</a></th>
+                    <th><a href="?order_by=model_steering_axle">Модель управляемого моста</a></th>
+                    <th><a href="?order_by=steering_axle_serial_number">Зав. № управляемого моста</a></th>
+                    <th><a href="?order_by=supply_contract">Договор поставки №, дата</a></th>
+                    <th><a href="?order_by=shipment_date">Дата отгрузки с завода</a></th>
+                    <th><a href="?order_by=consignee">Грузополучатель (конечный потребитель)</a></th>
+                    <th><a href="?order_by=supply_address">Адрес поставки (эксплуатации)</a></th>
+                    <th><a href="?order_by=equipment">Комплектация (доп. опции)</a></th>
+                    <th><a href="?order_by=client">Клиент</a></th>
+                    <th><a href="?order_by=service_company">Сервисная компания</a></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -56,20 +56,25 @@
                     <td>{{ machine.serial_number }}</td>
                     <td>{{ machine.model_technique }}</td>
                     <td>{{ machine.model_engine }}</td>
-                    <td>{{ machine.engine_serial_number }}</td>
+                    <td>{{ machine.serial_engine }}</td>
                     <td>{{ machine.model_transmission }}</td>
-                    <td>{{ machine.transmission_serial_number }}</td>
+                    <td>{{ machine.serial_transmission }}</td>
                     <td>{{ machine.model_drive_axle }}</td>
-                    <td>{{ machine.drive_axle_serial_number }}</td>
+                    <td>{{ machine.serial_drive_axle }}</td>
                     <td>{{ machine.model_steering_axle }}</td>
-                    <td>{{ machine.steering_axle_serial_number }}</td>
-                    <td>{{ machine.supply_contract }}</td>
+                    <td>{{ machine.serial_steering_axle }}</td>
+                    <td>{{ machine.delivery_contract }}</td>
                     <td>{{ machine.shipment_date|date:"Y-m-d" }}</td>
                     <td>{{ machine.consignee }}</td>
-                    <td>{{ machine.supply_address }}</td>
-                    <td>{{ machine.equipment }}</td>
+                    <td>{{ machine.delivery_address }}</td>
+                    <td>{{ machine.configuration }}</td>
                     <td>{{ machine.client }}</td>
                     <td>{{ machine.service_company }}</td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="17">Нет данных</td>
                 </tr>
                 {% endfor %}
                 </tbody>
