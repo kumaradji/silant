@@ -5,6 +5,18 @@ function showTab(tabId) {
     }
     document.getElementById(tabId).style.display = 'block';
     localStorage.setItem('activeTab', tabId);
+
+    // Убираем класс active у всех кнопок
+    var tabButtons = document.getElementsByClassName('tab');
+    for (var i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].classList.remove('active');
+    }
+
+    // Добавляем класс active к текущей кнопке
+    var activeButton = document.querySelector(`.tab[onclick="showTab('${tabId}')"]`);
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
 }
 
 var activeTab = localStorage.getItem('activeTab') || 'machines';
@@ -66,6 +78,46 @@ document.getElementById('save-maintenance-button').addEventListener('click', fun
     });
 });
 
+document.getElementById('save-reclamation-button').addEventListener('click', function() {
+    let rows = document.querySelectorAll('#reclamations tbody tr');
+    let data = [];
+
+    rows.forEach(row => {
+        let rowData = {
+            id: row.getAttribute('data-id'),
+            failure_date: row.cells[1].innerText.trim(),
+            operating_time: row.cells[2].innerText.trim(),
+            failure_unit: row.cells[3].innerText.trim(),
+            recovery_method: row.cells[4].innerText.trim()
+        };
+        data.push(rowData);
+    });
+
+    console.log('Data to be sent:', JSON.stringify(data, null, 2));
+
+    fetch('/save_reclamations/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Изменения успешно сохранены!');
+            document.getElementById('save-reclamation-button').style.display = 'none';
+        } else {
+            alert(`Произошла ошибка при сохранении изменений: ${data.message}`);
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при сохранении изменений');
+    });
+});
+
 function showSaveButton(tableId, buttonId) {
     var table = document.getElementById(tableId);
     var button = document.getElementById(buttonId);
@@ -88,7 +140,9 @@ function showSaveButton(tableId, buttonId) {
     });
 }
 
+showSaveButton('machines', 'save-machines-button');
 showSaveButton('maintenances', 'save-maintenance-button');
+showSaveButton('reclamations', 'save-reclamation-button');
 
 function makeEditable(tableId) {
     var table = document.getElementById(tableId);
@@ -98,6 +152,7 @@ function makeEditable(tableId) {
 }
 
 makeEditable('maintenances');
+makeEditable('reclamations');
 
 function goToMachineDetail(machineId) {
     window.location.href = `/machine/${machineId}/`;

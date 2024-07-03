@@ -6,50 +6,77 @@
 {% block content %}
 <main>
     <section class="main-container">
+        <!-- Верхняя информация -->
+        <div class="header-info">
+            <h1>сервисная компания: {{ user.first_name }}</h1>
+            <h2>Информация о комплектации и технические характеристики Вашей техники</h2>
+        </div>
+
         <!-- Вкладки для переключения между разделами -->
         <div class="tabs">
-            <button onclick="showTab('machines')" class="active">Машины</button>
-            <button onclick="showTab('maintenances')">Техническое обслуживание</button>
-            <button onclick="showTab('reclamations')">Рекламации</button>
+            <button id="tab-machines" class="tab active">Машины</button>
+            <button id="tab-maintenances" class="tab">Техническое обслуживание</button>
+            <button id="tab-reclamations" class="tab">Рекламации</button>
         </div>
 
         <!-- Таблица с машинами -->
         <div id="machines" class="tab-content active">
-            <h2>Машины</h2>
+            <h2>Общая информация</h2>
             <!-- Форма фильтрации данных -->
             <form method="get">
                 {{ machine_filter.form.as_p }}
                 <button type="submit">Фильтр</button>
             </form>
-            <table id="machines">
+            <table id="machines-table">
                 <thead>
                 <tr class="table-header">
-                    <th><a href="?order_by=model_technique">Модель техники</a></th>
-                    <th><a href="?order_by=serial_number">Зав. № машины</a></th>
-                    <th><a href="?order_by=model_engine">Модель двигателя</a></th>
-                    <th><a href="?order_by=model_transmission">Модель трансмиссии</a></th>
-                    <th><a href="?order_by=model_drive_axle">Модель ведущего моста</a></th>
-                    <th><a href="?order_by=model_steering_axle">Модель управляемого моста</a></th>
-                    <th><a href="?order_by=shipment_date">Дата отгрузки с завода</a></th>
+                    <th>Зав. № машины</th>
+                    <th>Модель техники</th>
+                    <th>Модель двигателя</th>
+                    <th>Зав. № двигателя</th>
+                    <th>Модель трансмиссии</th>
+                    <th>Зав. № трансмиссии</th>
+                    <th>Модель ведущего моста</th>
+                    <th>Зав. № ведущего моста</th>
+                    <th>Модель управляемого моста</th>
+                    <th>Зав. № управляемого моста</th>
+                    <th>Договор поставки №, дата</th>
+                    <th>Дата отгрузки с завода</th>
+                    <th>Грузополучатель (конечный потребитель)</th>
+                    <th>Адрес поставки (эксплуатации)</th>
+                    <th>Комплектация (доп. опции)</th>
+                    <th>Клиент</th>
+                    <th>Сервисная компания</th>
                 </tr>
                 </thead>
                 <tbody>
                 <!-- Перебор и отображение списка машин -->
                 {% for machine in machine_filter.qs %}
                 <tr data-id="{{ machine.id }}" onclick="goToMachineDetail('{{ machine.id }}')">
-                    <td>{{ machine.model_technique }}</td>
                     <td>{{ machine.serial_number }}</td>
+                    <td>{{ machine.model_technique }}</td>
                     <td>{{ machine.model_engine }}</td>
+                    <td>{{ machine.engine_serial_number }}</td>
                     <td>{{ machine.model_transmission }}</td>
+                    <td>{{ machine.transmission_serial_number }}</td>
                     <td>{{ machine.model_drive_axle }}</td>
+                    <td>{{ machine.drive_axle_serial_number }}</td>
                     <td>{{ machine.model_steering_axle }}</td>
+                    <td>{{ machine.steering_axle_serial_number }}</td>
+                    <td>{{ machine.supply_contract }}</td>
                     <td>{{ machine.shipment_date|date:"Y-m-d" }}</td>
+                    <td>{{ machine.consignee }}</td>
+                    <td>{{ machine.supply_address }}</td>
+                    <td>{{ machine.equipment }}</td>
+                    <td>{{ machine.client }}</td>
+                    <td>{{ machine.service_company }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
             <button id="save-machines-button" style="display: none;">Сохранить изменения в машинах</button>
         </div>
+
 
         <!-- Таблица с техническим обслуживанием -->
         <div id="maintenances" class="tab-content">
@@ -59,14 +86,14 @@
                 {{ maintenance_filter.form.as_p }}
                 <button type="submit">Фильтр</button>
             </form>
-            <table id="maintenances">
+            <table id="maintenances-table">
                 <thead>
                 <tr class="table-header">
                     <th><a href="?order_by=machine__serial_number">Машина</a></th>
-                    <th><a href="?order_by=maintenance_type">Вид ТО</a></th>
-                    <th><a href="?order_by=maintenance_date">Дата проведения ТО</a></th>
-                    <th><a href="?order_by=operating_time">Наработка, м/час</a></th>
-                    <th><a href="?order_by=service_company__first_name">Сервисная компания</a></th>
+                    <th><a href="?order_by=maintenance_type">Вид ТО</а></th>
+                    <th><a href="?order_by=maintenance_date">Дата проведения ТО</а></th>
+                    <th><a href="?order_by=operating_time">Наработка, м/час</а></th>
+                    <th><a href="?order_by=service_company__first_name">Сервисная компания</а></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -77,7 +104,9 @@
                     <td contenteditable="true" class="editable">{{ maintenance.maintenance_type }}</td>
                     <td contenteditable="true" class="editable">{{ maintenance.maintenance_date|date:"Y-m-d" }}</td>
                     <td contenteditable="true" class="editable">{{ maintenance.operating_time }}</td>
-                    <td>{{ maintenance.service_company.first_name }}</td>
+                    <td>{% if maintenance.service_company.first_name %}{{ maintenance.service_company.first_name }}{%
+                        else %}самостоятельно{% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -93,7 +122,7 @@
                 {{ reclamation_filter.form.as_p }}
                 <button type="submit">Фильтр</button>
             </form>
-            <table id="reclamations">
+            <table id="reclamations-table">
                 <thead>
                 <tr class="table-header">
                     <th><a href="?order_by=machine__serial_number">Машина</a></th>

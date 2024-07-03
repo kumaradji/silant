@@ -54,6 +54,29 @@ header, footer {
     color: #EBE6D6;
 }
 
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.tab {
+    flex-grow: 1;
+    padding: 10px 0;
+    text-align: center;
+    cursor: pointer;
+    background-color: #163E6C;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0 5px;
+}
+
+.tab.active {
+    background-color: #756AB6;
+    color: #EBE6D6;
+}
+
+
 main {
     padding: 20px;
     flex: 1;
@@ -63,11 +86,12 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    font-size: 0.9em;
 }
 
 table th, table td {
     border: 1px solid #163E6C;
-    padding: 8px;
+    padding: 6px;
     text-align: left;
 }
 

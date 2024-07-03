@@ -5,6 +5,18 @@ function showTab(tabId) {
     }
     document.getElementById(tabId).style.display = 'block';
     localStorage.setItem('activeTab', tabId);
+
+    // Убираем класс active у всех кнопок
+    var tabButtons = document.getElementsByClassName('tab');
+    for (var i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].classList.remove('active');
+    }
+
+    // Добавляем класс active к текущей кнопке
+    var activeButton = document.querySelector(`.tab[onclick="showTab('${tabId}')"]`);
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
 }
 
 var activeTab = localStorage.getItem('activeTab') || 'machines';
@@ -190,9 +202,9 @@ function goToMachineDetail(machineId) {
     window.location.href = `/machine/${machineId}/`;
 }
 
-// Добавляем обработчик клика для первой колонки таблицы машин
+// Добавляем обработчик клика для строк таблицы машин
 document.getElementById('machines').addEventListener('click', function(event) {
-    if (event.target.tagName === 'TD' && event.target.cellIndex === 0) {
+    if (event.target.tagName === 'TD') {
         var machineId = event.target.parentElement.getAttribute('data-id');
         goToMachineDetail(machineId);
     }

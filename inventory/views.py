@@ -143,6 +143,7 @@ def service_company_view(request):
     """
     Представление для отображения данных для сервисных компаний.
     """
+    user = request.user
     machines = Machine.objects.filter(service_company=request.user)
     maintenances = Maintenance.objects.filter(machine__service_company=request.user)
     reclamations = Reclamation.objects.filter(machine__service_company=request.user)
@@ -152,6 +153,7 @@ def service_company_view(request):
     reclamation_filter = ReclamationFilter(request.GET, queryset=reclamations)
 
     return render(request, 'inventory/service_company_view.html', {
+        'user': user,
         'machine_filter': machine_filter,
         'maintenance_filter': maintenance_filter,
         'reclamation_filter': reclamation_filter

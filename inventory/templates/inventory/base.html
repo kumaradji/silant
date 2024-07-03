@@ -31,12 +31,12 @@
         {% endif %}
     </div>
 </header>
-<div class="info-header">
-    <p>Проверьте комплектацию и технические характеристики техники Силант</p>
-    {% if user.is_authenticated %}
-    <p>Пользователь: {{ user.username }}</p>
-    {% endif %}
-</div>
+<!--<div class="info-header">-->
+<!--    <p>Проверьте комплектацию и технические характеристики техники Силант</p>-->
+<!--    {% if user.is_authenticated %}-->
+<!--    <p>Пользователь: {{ user.username }}</p>-->
+<!--    {% endif %}-->
+<!--</div>-->
 <main>
     <!-- Блок контента, который будет изменяться в дочерних шаблонах -->
     {% block content %}{% endblock %}

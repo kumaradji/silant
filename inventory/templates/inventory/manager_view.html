@@ -6,6 +6,12 @@
 {% block content %}
 <main>
     <section class="main-container">
+        <!-- Верхняя информация -->
+        <div class="header-info">
+            <h1>менеджер: {{ user.first_name }}</h1>
+            <h2>Информация о комплектации и технические характеристики Вашей техники</h2>
+        </div>
+
         <!-- Вкладки для переключения между разделами -->
         <div class="tabs">
             <button onclick="showTab('machines')" class="active">Машины</button>

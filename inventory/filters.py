@@ -4,6 +4,7 @@
 import django_filters
 from .models import Machine, Maintenance, Reclamation
 
+
 class MachineFilter(django_filters.FilterSet):
     """
     Фильтр для модели Machine.
@@ -45,6 +46,7 @@ class MachineFilter(django_filters.FilterSet):
             'model_drive_axle'
         ]
 
+
 class MaintenanceFilter(django_filters.FilterSet):
     """
     Фильтр для модели Maintenance.
@@ -73,6 +75,7 @@ class MaintenanceFilter(django_filters.FilterSet):
             'serial_number',
             'service_company'
         ]
+
 
 class ReclamationFilter(django_filters.FilterSet):
     """
