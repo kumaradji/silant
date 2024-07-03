@@ -130,7 +130,9 @@ class Maintenance(models.Model):
     service_company = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name='Организация, проводившая ТО'
+        verbose_name='Организация, проводившая ТО',
+        null=True,  # добавлено чтобы избежать ошибок при отсутствии данных
+        blank=True  # добавлено чтобы избежать ошибок при отсутствии данных
     )
 
     def __str__(self):

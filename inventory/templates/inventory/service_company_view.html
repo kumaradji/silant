@@ -45,7 +45,6 @@
                     <th><a href="?order_by=consignee">Грузополучатель (конечный потребитель)</a></th>
                     <th><a href="?order_by=supply_address">Адрес поставки (эксплуатации)</a></th>
                     <th><a href="?order_by=equipment">Комплектация (доп. опции)</a></th>
-                    <th><a href="?order_by=client">Клиент</a></th>
                     <th><a href="?order_by=service_company">Сервисная компания</a></th>
                 </tr>
                 </thead>
@@ -68,7 +67,6 @@
                     <td>{{ machine.consignee }}</td>
                     <td>{{ machine.delivery_address }}</td>
                     <td>{{ machine.configuration }}</td>
-                    <td>{{ machine.client }}</td>
                     <td>{{ machine.service_company }}</td>
                 </tr>
 
@@ -94,10 +92,12 @@
             <table id="maintenances-table">
                 <thead>
                 <tr class="table-header">
-                    <th><a href="?order_by=machine__serial_number">Машина</a></th>
+                    <th><a href="?order_by=machine__serial_number">Зав. № машины</a></th>
                     <th><a href="?order_by=maintenance_type">Вид ТО</а></th>
                     <th><a href="?order_by=maintenance_date">Дата проведения ТО</а></th>
                     <th><a href="?order_by=operating_time">Наработка, м/час</а></th>
+                    <th><a href="?order_by=order_number">№ заказ-наряда</а></th>
+                    <th><a href="?order_by=order_date">Дата заказ-наряда</а></th>
                     <th><a href="?order_by=service_company__first_name">Сервисная компания</а></th>
                 </tr>
                 </thead>
@@ -109,8 +109,14 @@
                     <td contenteditable="true" class="editable">{{ maintenance.maintenance_type }}</td>
                     <td contenteditable="true" class="editable">{{ maintenance.maintenance_date|date:"Y-m-d" }}</td>
                     <td contenteditable="true" class="editable">{{ maintenance.operating_time }}</td>
-                    <td>{% if maintenance.service_company.first_name %}{{ maintenance.service_company.first_name }}{%
-                        else %}самостоятельно{% endif %}
+                    <td contenteditable="true" class="editable">{{ maintenance.order_number }}</td>
+                    <td contenteditable="true" class="editable">{{ maintenance.order_date|date:"Y-m-d" }}</td>
+                    <td>
+                    {% if maintenance.service_company %}
+                        {{ maintenance.service_company.first_name }}
+                    {% else %}
+                        самостоятельно
+                    {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
@@ -118,6 +124,7 @@
             </table>
             <button id="save-maintenance-button" style="display: none;">Сохранить изменения в ТО</button>
         </div>
+
 
         <!-- Таблица с рекламациями -->
         <div id="reclamations" class="tab-content">

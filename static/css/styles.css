@@ -86,7 +86,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    font-size: 0.9em;
+    font-size: 0.7em;
 }
 
 table th, table td {
@@ -145,15 +145,6 @@ button:hover {
     min-width: 0; /* Это позволит колонкам сжиматься при необходимости */
 }
 
-@media (max-width: 768px) {
-    .detail-container {
-        flex-direction: column;
-    }
-
-    .left-column, .right-column {
-        width: 100%;
-    }
-}
 
 @media (max-width: 1440px) {
     .header-left img {
