@@ -23,10 +23,32 @@
         <div id="machines" class="tab-content active">
             <h2>Общая информация</h2>
             <!-- Форма фильтрации данных -->
-            <form method="get">
-                {{ machine_filter.form.as_p }}
-                <button type="submit">Фильтр</button>
+            <form method="get" class="filter-form">
+                <div class="filter-container">
+                    <div class="filter-item">
+                        {{ machine_filter.form.model_technique }}
+                        <label>Модель техники</label>
+                    </div>
+                    <div class="filter-item">
+                        {{ machine_filter.form.model_engine }}
+                        <label>Модель двигателя</label>
+                    </div>
+                    <div class="filter-item">
+                        {{ machine_filter.form.model_transmission }}
+                        <label>Модель трансмиссии</label>
+                    </div>
+                    <div class="filter-item">
+                        {{ machine_filter.form.model_steering_axle }}
+                        <label>Модель управляемого моста</label>
+                    </div>
+                    <div class="filter-item">
+                        {{ machine_filter.form.model_drive_axle }}
+                        <label>Модель ведущего моста</label>
+                    </div>
+                    <button type="submit" class="filter-button">Найти</button>
+                </div>
             </form>
+
             <table id="machines-table">
                 <thead>
                 <tr class="table-header">
@@ -85,10 +107,24 @@
         <div id="maintenances" class="tab-content">
             <h2>Техническое обслуживание</h2>
             <!-- Форма фильтрации данных -->
-            <form method="get">
-                {{ maintenance_filter.form.as_p }}
-                <button type="submit">Фильтр</button>
+            <form method="get" class="filter-form">
+                <div class="filter-container">
+                    <div class="filter-item">
+                        {{ maintenance_filter.form.maintenance_type }}
+                        <label for="id_maintenance_type">Вид ТО</label>
+                    </div>
+                    <div class="filter-item">
+                        {{ maintenance_filter.form.serial_number }}
+                        <label for="id_serial_number">Зав. № машины</label>
+                    </div>
+                    <div class="filter-item">
+                        {{ maintenance_filter.form.service_company }}
+                        <label for="id_service_company">Сервисная компания</label>
+                    </div>
+                    <button type="submit" class="filter-button">Найти</button>
+                </div>
             </form>
+
             <table id="maintenances-table">
                 <thead>
                 <tr class="table-header">
@@ -130,10 +166,24 @@
         <div id="reclamations" class="tab-content">
             <h2>Рекламации</h2>
             <!-- Форма фильтрации данных -->
-            <form method="get">
-                {{ reclamation_filter.form.as_p }}
-                <button type="submit">Фильтр</button>
+            <form method="get" class="filter-form">
+                <div class="filter-container">
+                    <div class="filter-item">
+                        {{ reclamation_filter.form.failure_unit }}
+                        <label>Узел отказа</label>
+                    </div>
+                    <div class="filter-item">
+                        {{ reclamation_filter.form.recovery_method }}
+                        <label>Способ восстановления</label>
+                    </div>
+                    <div class="filter-item">
+                        {{ reclamation_filter.form.service_company }}
+                        <label>Сервисная компания</label>
+                    </div>
+                    <button type="submit" class="filter-button">Найти</button>
+                </div>
             </form>
+
             <table id="reclamations-table">
                 <thead>
                 <tr class="table-header">

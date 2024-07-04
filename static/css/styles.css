@@ -145,6 +145,57 @@ button:hover {
     min-width: 0; /* Это позволит колонкам сжиматься при необходимости */
 }
 
+.filter-form {
+    margin-bottom: 20px;
+}
+
+.filter-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    min-width: 150px;
+}
+
+.filter-item select,
+.filter-item input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+}
+
+.filter-item label {
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 5px;
+    align-self: flex-start;
+}
+
+.filter-button {
+    padding: 5px 10px;
+    background-color: #163E6C;
+    color: #EBE6D6;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 30px;
+    align-self: flex-end;
+}
+
+.filter-button:hover {
+    background-color: #D20A11;
+}
+
 
 @media (max-width: 1440px) {
     .header-left img {

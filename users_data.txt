@@ -1,0 +1,17 @@
+Username: IP_Trudnikov_SV, Display Name: ИП Трудников С.В., Password: password123
+Username: OOO_MNS77, Display Name: ООО МНС77, Password: password123
+Username: OOO_Ranskiy_LPH, Display Name: ООО Ранский ЛПХ, Password: password123
+Username: OOO_RMK, Display Name: ООО РМК, Password: password123
+Username: OOO_FPK21, Display Name: ООО ФПК21, Password: password123
+Username: OOO_DET_No13, Display Name: ООО ДЭТ №13, Password: password123
+Username: FRP_Rossii, Display Name: ФРП России, Password: password123
+Username: OOO_Komplekt_Postavka, Display Name: ООО Комплект-Поставка, Password: password123
+Username: OOO_GP_SPB, Display Name: ООО ГП СПБ, Password: password123
+Username: AO_Zander, Display Name: АО Зандер, Password: password123
+Username: AO_T_Minus, Display Name: АО Т-Минус, Password: password123
+Username: FSN_Rossii, Display Name: ФСН России, Password: password123
+Username: OOO_Mosgorrest, Display Name: ООО Мосгоррест, Password: password123
+Username: OOO_FNS, Display Name: ООО ФНС, Password: password123
+Username: OOO_Silant, Display Name: ООО Силант, Password: password123
+Username: OOO_Prom_t, Display Name: ООО Промышленная техника, Password: password123
+Username: OOO_GP_Krasnodar, Display Name: ООО ГП Краснодар, Password: password123
