@@ -8,8 +8,8 @@
     <section class="main-container">
         <!-- Верхняя информация -->
         <div class="header-info">
+            <h3> Вы авторизованы как</h3>
             <h1>менеджер: {{ user.first_name }}</h1>
-            <h2>Информация о комплектации и технические характеристики Вашей техники</h2>
         </div>
 
         <!-- Вкладки для переключения между разделами -->
@@ -21,7 +21,7 @@
 
         <!-- Таблица с машинами -->
         <div id="machines" class="tab-content active">
-            <h2>Машины</h2>
+            <h2>Проверьте комплектацию и технические характеристики техники Силант</h2>
             <!-- Форма фильтрации данных -->
             <form method="get" class="filter-form">
                 <div class="filter-container">
@@ -80,7 +80,7 @@
 
         <!-- Таблица с техническим обслуживанием -->
         <div id="maintenances" class="tab-content">
-            <h2>Техническое обслуживание</h2>
+            <h2>Информация о проведённых ТО Вашей техники</h2>
             <!-- Форма фильтрации данных -->
             <form method="get" class="filter-form">
                 <div class="filter-container">
