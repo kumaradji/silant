@@ -15,7 +15,8 @@
         <!-- Вкладки для переключения между разделами -->
         <div class="tabs">
             <button id="tab-machines" class="tab" onclick="showTab('machines')">Машины</button>
-            <button id="tab-maintenances" class="tab" onclick="showTab('maintenances')">Техническое обслуживание</button>
+            <button id="tab-maintenances" class="tab" onclick="showTab('maintenances')">Техническое обслуживание
+            </button>
             <button id="tab-reclamations" class="tab" onclick="showTab('reclamations')">Рекламации</button>
         </div>
 
@@ -115,7 +116,9 @@
                     <td contenteditable="true" class="editable">{{ maintenance.maintenance_type }}</td>
                     <td contenteditable="true" class="editable">{{ maintenance.maintenance_date|date:"Y-m-d" }}</td>
                     <td contenteditable="true" class="editable">{{ maintenance.operating_time }}</td>
-                    <td>{{ maintenance.service_company.first_name }}</td>
+                    <td contenteditable="true" class="editable">
+                        {{ maintenance.service_company.first_name|default:"самостоятельно" }}
+                    </td>
                 </tr>
                 {% endfor %}
                 </tbody>

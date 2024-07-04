@@ -147,12 +147,8 @@
                     <td contenteditable="true" class="editable">{{ maintenance.operating_time }}</td>
                     <td contenteditable="true" class="editable">{{ maintenance.order_number }}</td>
                     <td contenteditable="true" class="editable">{{ maintenance.order_date|date:"Y-m-d" }}</td>
-                    <td>
-                        {% if maintenance.service_company %}
-                        {{ maintenance.service_company.first_name }}
-                        {% else %}
-                        самостоятельно
-                        {% endif %}
+                    <td contenteditable="true" class="editable">
+                        {{ maintenance.service_company.first_name|default:"самостоятельно" }}
                     </td>
                 </tr>
                 {% endfor %}
