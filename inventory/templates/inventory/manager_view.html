@@ -7,20 +7,20 @@
 <main>
     <section class="main-container">
         <!-- Верхняя информация -->
-        <div class="header-info">
+        <div class="user-info">
             <h3> Вы авторизованы как</h3>
             <h1>менеджер: {{ user.first_name }}</h1>
         </div>
 
         <!-- Вкладки для переключения между разделами -->
         <div class="tabs">
-            <button onclick="showTab('machines')" class="active">Машины</button>
-            <button onclick="showTab('maintenances')">Техническое обслуживание</button>
-            <button onclick="showTab('reclamations')">Рекламации</button>
+            <button id="tab-machines" class="tab" onclick="showTab('machines')">Машины</button>
+            <button id="tab-maintenances" class="tab" onclick="showTab('maintenances')">Техническое обслуживание</button>
+            <button id="tab-reclamations" class="tab" onclick="showTab('reclamations')">Рекламации</button>
         </div>
 
         <!-- Таблица с машинами -->
-        <div id="machines" class="tab-content active">
+        <div id="machines" class="tab-content">
             <h2>Проверьте комплектацию и технические характеристики техники Силант</h2>
             <!-- Форма фильтрации данных -->
             <form method="get" class="filter-form">
@@ -61,7 +61,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Перебор и отображение списка машин -->
                 {% for machine in machine_filter.qs %}
                 <tr data-id="{{ machine.id }}">
                     <td class="clickable">{{ machine.model_technique }}</td>
@@ -110,7 +109,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Перебор и отображение списка технического обслуживания -->
                 {% for maintenance in maintenance_filter.qs %}
                 <tr data-id="{{ maintenance.id }}">
                     <td>{{ maintenance.machine.serial_number }}</td>
@@ -158,7 +156,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Перебор и отображение списка рекламаций -->
                 {% for reclamation in reclamation_filter.qs %}
                 <tr data-id="{{ reclamation.id }}">
                     <td>{{ reclamation.machine.serial_number }}</td>

@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
     function showTab(tabId) {
-        console.log(`Switching to tab: ${tabId}`);
         var tabs = document.getElementsByClassName('tab-content');
         for (var i = 0; i < tabs.length; i++) {
             tabs[i].style.display = 'none';
